@@ -1,7 +1,6 @@
 import {
     Avatar,
     Button,
-    CssBaseline,
     TextField,
     FormControlLabel,
     Checkbox,
@@ -15,29 +14,19 @@ import {
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import LoginPageSideImage from '../../assets/LoginPageSideImage.png';
 import { useState } from 'react';
-import { toast } from 'react-toastify';
+import { useDispatch } from 'react-redux';
+import { loginUser } from '../../redux/features/userDataSlice';
+import { useNavigate } from 'react-router-dom';
+
 const LoginPageComponent = () => {
-    const FORM_RESPONSE_MESSAGES = {
-        EMAIL_FORMAT_NOT_VALID:
-            'The email you have entered is not valid, please provide a valid email address!',
-        PASSWORD_FORMAT_NOT_VALID:
-            'The password you have entered is not valid for our password requirements and cannot be your password, please provide a valid password!',
-        FORM_IS_VALID: 'Login request sent successfully!',
-    };
+    const navigate = useNavigate();
+    const dispatch = useDispatch();
     const [formData, setFormData] = useState({
-        email: '',
+        identifier: '',
         password: '',
         rememberMe: false,
     });
-    const isEmailValid = (email) => {
-        let emailRegEx = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
-        return emailRegEx.test(email);
-    };
-    const isPasswordValid = (password) => {
-        const passwordRegEx =
-            /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?.+&])[A-Za-z\d@$!%*?.+&]{6,}$/;
-        return passwordRegEx.test(password);
-    };
+
     const handleChange = (event) => {
         const { name, value, type, checked } = event.target;
         setFormData({
@@ -45,19 +34,11 @@ const LoginPageComponent = () => {
             [name]: type === 'checkbox' ? checked : value,
         });
     };
-    const handleSubmit = (event) => {
+    const handleLogin = async (event) => {
         event.preventDefault();
-        let { email, password } = formData;
-        if (!isEmailValid(email)) {
-            toast.error(FORM_RESPONSE_MESSAGES.EMAIL_FORMAT_NOT_VALID);
-        }
-
-        if (!isPasswordValid(password)) {
-            toast.error(FORM_RESPONSE_MESSAGES.PASSWORD_FORMAT_NOT_VALID);
-            return;
-        }
-
-        toast.success(FORM_RESPONSE_MESSAGES.FORM_IS_VALID);
+        let { identifier, password } = formData;
+        await dispatch(loginUser({ identifier, password })).unwrap();
+        navigate('/dashboard');
     };
     return (
         <Grid container component="main" sx={{ height: '100vh' }}>
@@ -100,20 +81,19 @@ const LoginPageComponent = () => {
                     <Box
                         component="form"
                         noValidate
-                        onSubmit={handleSubmit}
+                        onSubmit={handleLogin}
                         sx={{ mt: 1 }}
                     >
                         <TextField
                             margin="normal"
                             required
                             fullWidth
-                            id="email"
-                            label="Email Address"
-                            name="email"
-                            autoComplete="email"
+                            id="identifier"
+                            label="Email Address or Username"
+                            name="identifier"
                             autoFocus
                             onChange={handleChange}
-                            value={formData.email}
+                            value={formData.identifier}
                         />
                         <TextField
                             margin="normal"

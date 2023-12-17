@@ -1,50 +1,29 @@
 import {
     Avatar,
     Button,
-    CssBaseline,
     TextField,
-    FormControlLabel,
-    Checkbox,
     Link,
     Paper,
     Box,
     Grid,
     Typography,
 } from '@mui/material';
-
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import RegisterPageSideImage from '../../assets/RegisterPageSideImage.png';
 import { useState } from 'react';
-import { toast } from 'react-toastify';
+import { useDispatch } from 'react-redux';
+import { registerUser } from '../../redux/features/userDataSlice';
+import { useNavigate } from 'react-router-dom';
 
 const RegisterPageComponent = () => {
-    const FORM_RESPONSE_MESSAGES = {
-        EMAIL_FORMAT_NOT_VALID:
-            'The email you have entered is not valid, please provide a valid email address!',
-        PASSWORD_FORMAT_NOT_VALID:
-            'The password you have entered is not valid, please provide a valid password!',
-        PASSWORD_AND_PASSWORD_REPEAT_DO_NOT_MATCH:
-            'Password and password repeat do not match!',
-        FORM_IS_VALID: 'Registration request sent successfully!',
-    };
-
+    const navigate = useNavigate();
+    const dispatch = useDispatch();
     const [formData, setFormData] = useState({
+        username: '',
         email: '',
         password: '',
         passwordRepeat: '',
     });
-    const isEmailValid = (email) => {
-        let emailRegEx = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
-        return emailRegEx.test(email);
-    };
-    const isPasswordValid = (password) => {
-        const passwordRegEx =
-            /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?.+&])[A-Za-z\d@$!%*?.+&]{6,}$/;
-        return passwordRegEx.test(password);
-    };
-    const arePasswordAndPasswordRepeatSame = (password, passwordRepeat) => {
-        return password === passwordRepeat;
-    };
     const handleChange = (event) => {
         const { name, value, type, checked } = event.target;
         setFormData({
@@ -52,24 +31,12 @@ const RegisterPageComponent = () => {
             [name]: type === 'checkbox' ? checked : value,
         });
     };
-    const handleSubmit = (event) => {
+
+    const handleRegister = async (event) => {
         event.preventDefault();
-        let { email, password, passwordRepeat } = formData;
-        if (!isEmailValid(email)) {
-            toast.error(FORM_RESPONSE_MESSAGES.EMAIL_FORMAT_NOT_VALID);
-        }
-
-        if (!isPasswordValid(password)) {
-            toast.error(FORM_RESPONSE_MESSAGES.PASSWORD_FORMAT_NOT_VALID);
-        }
-
-        if (!arePasswordAndPasswordRepeatSame(password, passwordRepeat)) {
-            toast.error(
-                FORM_RESPONSE_MESSAGES.PASSWORD_AND_PASSWORD_REPEAT_DO_NOT_MATCH
-            );
-            return;
-        }
-        toast.success(FORM_RESPONSE_MESSAGES.FORM_IS_VALID);
+        let { username, email, password, passwordRepeat } = formData;
+        await dispatch(registerUser({ username, email, password })).unwrap();
+        navigate('/dashboard');
     };
     return (
         <Grid container component="main" sx={{ height: '100vh' }}>
@@ -112,9 +79,20 @@ const RegisterPageComponent = () => {
                     <Box
                         component="form"
                         noValidate
-                        onSubmit={handleSubmit}
+                        onSubmit={handleRegister}
                         sx={{ mt: 1 }}
                     >
+                        <TextField
+                            margin="normal"
+                            required
+                            fullWidth
+                            id="username"
+                            label="Username"
+                            name="username"
+                            autoFocus
+                            onChange={handleChange}
+                            value={formData.username}
+                        />
                         <TextField
                             margin="normal"
                             required
@@ -123,7 +101,6 @@ const RegisterPageComponent = () => {
                             label="Email Address"
                             name="email"
                             autoComplete="email"
-                            autoFocus
                             onChange={handleChange}
                             value={formData.email}
                         />
@@ -146,7 +123,7 @@ const RegisterPageComponent = () => {
                             name="passwordRepeat"
                             label="Password Repeat"
                             type="password"
-                            id="password"
+                            id="password-repeat"
                             autoComplete="current-password"
                             onChange={handleChange}
                             value={formData.passwordRepeat}
