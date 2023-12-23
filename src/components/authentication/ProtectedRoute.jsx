@@ -3,7 +3,7 @@ import { Navigate } from 'react-router-dom';
 
 const ProtectedRoute = ({ children }) => {
     const user = useSelector((state) => state.userData);
-    if (!user) {
+    if (!user.username || !user.userEmailAddress) {
         return <Navigate to="/login" />;
     }
 

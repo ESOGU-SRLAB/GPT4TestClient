@@ -7,11 +7,7 @@ const DashboardPageComponent = () => {
     const onLogoutClick = () => {
         dispatch(handleLogout(navigate));
     };
-    return (
-        <>
-            <button onClick={onLogoutClick}>Log out</button>
-        </>
-    );
+    return <>Dashboard Page</>;
 };
 
 export default DashboardPageComponent;
