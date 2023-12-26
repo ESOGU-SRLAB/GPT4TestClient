@@ -65,6 +65,10 @@ export const registerUser = createAsyncThunk(
                     userEmailAddress: email,
                 })
             );
+            saveUserDataToLocalStorage({
+                username,
+                userEmailAddress: email,
+            });
             toast.success(response.data.message);
             return response.data;
         } catch (error) {

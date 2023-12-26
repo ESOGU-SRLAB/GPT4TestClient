@@ -32,20 +32,25 @@ export const saveModelSettingsToDB = createAsyncThunk(
     }
 );
 
+const initialState = {
+    modelSelection: '',
+    temperature: 1.04,
+    maxLength: 1877,
+    stopSequences: [],
+    topP: 1,
+    frequencyPenalty: 0,
+    presencePenalty: 0.94,
+};
+
 export const modelSettingsSlice = createSlice({
     name: 'modelSettings',
-    initialState: {
-        modelSelection: '',
-        temperature: 1.04,
-        maxLength: 1877,
-        stopSequences: [],
-        topP: 1,
-        frequencyPenalty: 0,
-        presencePenalty: 0.94,
-    },
+    initialState,
     reducers: {
         updateSettings: (state, action) => {
             return { ...state, ...action.payload };
+        },
+        resetModelSettings: (state) => {
+            return initialState;
         },
     },
     extraReducers: (builder) => {
@@ -59,6 +64,7 @@ export const modelSettingsSlice = createSlice({
     },
 });
 
-export const { updateSettings } = modelSettingsSlice.actions;
+export const { updateSettings, resetModelSettings } =
+    modelSettingsSlice.actions;
 
 export default modelSettingsSlice.reducer;

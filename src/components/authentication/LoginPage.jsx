@@ -2,28 +2,31 @@ import {
     Avatar,
     Button,
     TextField,
+    FormControlLabel,
+    Checkbox,
     Link,
     Paper,
     Box,
     Grid,
     Typography,
 } from '@mui/material';
+
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
-import RegisterPageSideImage from '../../assets/RegisterPageSideImage.png';
+import LoginPageSideImage from '../../assets/LoginPageSideImage.png';
 import { useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { registerUser } from '../../redux/features/userDataSlice';
+import { loginUser } from '../../redux/features/userDataSlice';
 import { useNavigate } from 'react-router-dom';
 
-const RegisterPageComponent = () => {
+const LoginPage = () => {
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const [formData, setFormData] = useState({
-        username: '',
-        email: '',
+        identifier: '',
         password: '',
-        passwordRepeat: '',
+        rememberMe: false,
     });
+
     const handleChange = (event) => {
         const { name, value, type, checked } = event.target;
         setFormData({
@@ -31,12 +34,11 @@ const RegisterPageComponent = () => {
             [name]: type === 'checkbox' ? checked : value,
         });
     };
-
-    const handleRegister = async (event) => {
+    const handleLogin = async (event) => {
         event.preventDefault();
-        let { username, email, password, passwordRepeat } = formData;
-        await dispatch(registerUser({ username, email, password })).unwrap();
-        navigate('/dashboard');
+        let { identifier, password } = formData;
+        await dispatch(loginUser({ identifier, password })).unwrap();
+        navigate('/');
     };
     return (
         <Grid container component="main" sx={{ height: '100vh' }}>
@@ -46,7 +48,7 @@ const RegisterPageComponent = () => {
                 sm={4}
                 md={7}
                 sx={{
-                    backgroundImage: `url(${RegisterPageSideImage})`,
+                    backgroundImage: `url(${LoginPageSideImage})`,
                     backgroundRepeat: 'no-repeat',
                     backgroundSize: 'cover',
                     backgroundPosition: 'center',
@@ -70,39 +72,28 @@ const RegisterPageComponent = () => {
                         alignItems: 'center',
                     }}
                 >
-                    <Avatar sx={{ m: 1, bgcolor: '#653589' }}>
+                    <Avatar sx={{ m: 1, bgcolor: 'primary.main' }}>
                         <LockOutlinedIcon />
                     </Avatar>
                     <Typography component="h1" variant="h5">
-                        Sign Up GPT4Test
+                        Sign In GPT4Test
                     </Typography>
                     <Box
                         component="form"
                         noValidate
-                        onSubmit={handleRegister}
+                        onSubmit={handleLogin}
                         sx={{ mt: 1 }}
                     >
                         <TextField
                             margin="normal"
                             required
                             fullWidth
-                            id="username"
-                            label="Username"
-                            name="username"
+                            id="identifier"
+                            label="Email Address or Username"
+                            name="identifier"
                             autoFocus
                             onChange={handleChange}
-                            value={formData.username}
-                        />
-                        <TextField
-                            margin="normal"
-                            required
-                            fullWidth
-                            id="email"
-                            label="Email Address"
-                            name="email"
-                            autoComplete="email"
-                            onChange={handleChange}
-                            value={formData.email}
+                            value={formData.identifier}
                         />
                         <TextField
                             margin="normal"
@@ -116,31 +107,35 @@ const RegisterPageComponent = () => {
                             onChange={handleChange}
                             value={formData.password}
                         />
-                        <TextField
-                            margin="normal"
-                            required
-                            fullWidth
-                            name="passwordRepeat"
-                            label="Password Repeat"
-                            type="password"
-                            id="password-repeat"
-                            autoComplete="current-password"
-                            onChange={handleChange}
-                            value={formData.passwordRepeat}
+                        <FormControlLabel
+                            control={
+                                <Checkbox
+                                    name="rememberMe"
+                                    value="remember"
+                                    color="primary"
+                                    onChange={handleChange}
+                                    checked={formData.rememberMe}
+                                />
+                            }
+                            label="Remember me"
                         />
-
                         <Button
                             type="submit"
                             fullWidth
                             variant="contained"
-                            sx={{ mt: 3, mb: 2, bgcolor: '#7edd2a' }}
+                            sx={{ mt: 3, mb: 2 }}
                         >
-                            Sign Up
+                            Sign In
                         </Button>
-                        <Grid container justifyContent={'flex-end'}>
+                        <Grid container>
+                            <Grid item xs>
+                                <Link href="/forgot-password" variant="body2">
+                                    Forgot password?
+                                </Link>
+                            </Grid>
                             <Grid item>
-                                <Link href="/login" variant="body2">
-                                    {'Already have an account? Sign In'}
+                                <Link href="/register" variant="body2">
+                                    {"Don't have an account? Sign Up"}
                                 </Link>
                             </Grid>
                         </Grid>
@@ -151,4 +146,4 @@ const RegisterPageComponent = () => {
     );
 };
 
-export default RegisterPageComponent;
+export default LoginPage;

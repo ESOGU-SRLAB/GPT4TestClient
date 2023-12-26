@@ -20,7 +20,7 @@ import {
     saveModelSettingsToDB,
 } from '../../redux/features/modelSettingsSlice';
 
-const RightSidebarComponent = ({ open, toggleSidebar }) => {
+const RightSidebar = ({ open, toggleSidebar }) => {
     const dispatch = useDispatch();
     const savedSettings = useSelector((state) => state.modelSettings);
     const [settings, setSettings] = useState(savedSettings);
@@ -368,4 +368,4 @@ const RightSidebarComponent = ({ open, toggleSidebar }) => {
     );
 };
 
-export default RightSidebarComponent;
+export default RightSidebar;

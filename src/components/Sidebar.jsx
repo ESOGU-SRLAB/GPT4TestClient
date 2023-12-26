@@ -11,14 +11,13 @@ import {
     Divider,
 } from '@mui/material';
 import { Link as RouterLink } from 'react-router-dom';
-import InboxIcon from '@mui/icons-material/MoveToInbox';
-import MailIcon from '@mui/icons-material/Mail';
 
 import DashboardIcon from '../assets/sidebarIcons/dashboard.png';
 import AccountIcon from '../assets/sidebarIcons/account.png';
 import EditorIcon from '../assets/sidebarIcons/editor.png';
 import UnitTestIcon from '../assets/sidebarIcons/unittest.png';
 import HistoryIcon from '../assets/sidebarIcons/history.png';
+import TerminaIcon from '../assets/sidebarIcons/terminal.png';
 
 const Sidebar = ({ open, toggleSidebar }) => {
     const sidebarRoutingItems = [
@@ -26,7 +25,7 @@ const Sidebar = ({ open, toggleSidebar }) => {
             primaryText: 'Dashboard',
             secondaryText:
                 'Navigate to dashboard page to see your overall entities.',
-            to: '/dashboard',
+            to: '/',
             image: (
                 <img
                     src={DashboardIcon}
@@ -59,6 +58,18 @@ const Sidebar = ({ open, toggleSidebar }) => {
             ),
         },
         {
+            primaryText: 'Terminal Settings',
+            secondaryText:
+                'Configure your terminal settings as you wish, change terminal colors & more',
+            to: '/terminal-settings',
+            image: (
+                <img
+                    src={TerminaIcon}
+                    style={{ width: '24px', height: '24px' }}
+                />
+            ),
+        },
+        {
             primaryText: 'Unit Test Generation History',
             secondaryText:
                 'List your recent unit test codes and their execution results.',
@@ -74,7 +85,7 @@ const Sidebar = ({ open, toggleSidebar }) => {
             primaryText: 'Account',
             secondaryText:
                 'Navigate to account page to see & modify your personal information.',
-            to: '/dashboard',
+            to: '/account',
             image: (
                 <img
                     src={AccountIcon}
