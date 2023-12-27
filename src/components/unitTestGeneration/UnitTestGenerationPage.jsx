@@ -8,6 +8,10 @@ import SplitPane, { Pane } from 'split-pane-react';
 import { Box } from '@mui/material';
 import EditorLoadingScreen from './EditorLoadingScreen';
 import { fetchEditorSettingsFromDB } from '../../redux/features/editorSettingsSlice';
+import {
+    fetchExecutionTerminalSettingsFromDB,
+    fetchSpecialCommandTerminalSettingsFromDB,
+} from '../../redux/features/terminalSettingsSlice';
 import ExecutionTerminal from './ExecutionTerminal';
 import SpecialCommandTerminal from './SpecialCommandTerminal';
 
@@ -20,6 +24,8 @@ const UnitTestGenerationPage = () => {
     useEffect(() => {
         dispatch(fetchModelSettingsFromDB());
         dispatch(fetchEditorSettingsFromDB());
+        dispatch(fetchExecutionTerminalSettingsFromDB());
+        dispatch(fetchSpecialCommandTerminalSettingsFromDB());
     }, [dispatch]);
     const [inputCode, setInputCode] = useState('# type your code here');
     const [outputCode, setOutputCode] = useState(

@@ -8,7 +8,7 @@ export const fetchEditorSettingsFromDB = createAsyncThunk(
         const userIdentifier = userData.username || userData.userEmailAddress;
 
         const response = await axios.get(
-            `http://localhost:5000/api/users/getEditorSettings/${userIdentifier}`
+            `http://localhost:5000/api/users/editorSettings/getEditorSettings/${userIdentifier}`
         );
 
         return {
@@ -24,7 +24,7 @@ export const saveEditorSettingsToDB = createAsyncThunk(
         const { userData } = getState();
         const userIdentifier = userData.username || userData.userEmailAddress;
         const response = await axios.post(
-            'http://localhost:5000/api/users/updateEditorSettings',
+            'http://localhost:5000/api/users/editorSettings/updateEditorSettings',
             {
                 settings,
                 type,

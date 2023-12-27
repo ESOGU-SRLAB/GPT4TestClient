@@ -15,7 +15,7 @@ export const loginUser = createAsyncThunk(
     async ({ identifier, password }, { dispatch }) => {
         try {
             const response = await axios.post(
-                'http://localhost:5000/api/users/login',
+                'http://localhost:5000/api/auth/login',
                 {
                     identifier,
                     password,
@@ -50,7 +50,7 @@ export const registerUser = createAsyncThunk(
     async ({ username, email, password }, { dispatch }) => {
         try {
             const response = await axios.post(
-                'http://localhost:5000/api/users/register',
+                'http://localhost:5000/api/auth/register',
                 {
                     username,
                     userEmailAddress: email,

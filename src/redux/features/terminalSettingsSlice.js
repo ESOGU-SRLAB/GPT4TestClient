@@ -2,16 +2,28 @@ import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 
+const BASE_URL = 'http://localhost:5000/api/users';
+
 export const fetchExecutionTerminalSettingsFromDB = createAsyncThunk(
     'terminalSettings/fetchExecutionTerminalSettingsFromDB',
     async (_, { getState }) => {
         const { userData } = getState();
         const userIdentifier = userData.username || userData.userEmailAddress;
 
-        const response = await axios.get();
-        return {
-            executionTerminalSettings: response.data.executionTerminalSettings,
-        };
+        try {
+            const response = await axios.get(
+                `${BASE_URL}/executionTerminalSettings/getExecutionTerminalSettings/${userIdentifier}`
+            );
+            return {
+                executionTerminalSettings:
+                    response.data.executionTerminalSettings,
+            };
+        } catch (error) {
+            toast.error(
+                `Error fetching execution terminal settings: ${error.message}`
+            );
+            throw error;
+        }
     }
 );
 
@@ -21,33 +33,86 @@ export const fetchSpecialCommandTerminalSettingsFromDB = createAsyncThunk(
         const { userData } = getState();
         const userIdentifier = userData.username || userData.userEmailAddress;
 
-        const response = await axios.get();
-        return {
-            specialCommandTerminalSettings:
-                response.data.specialCommandTerminalSettings,
-        };
+        try {
+            const response = await axios.get(
+                `${BASE_URL}/specialCommandTerminalSettings/getSpecialCommandTerminalSettings/${userIdentifier}`
+            );
+            return {
+                specialCommandTerminalSettings:
+                    response.data.specialCommandTerminalSettings,
+            };
+        } catch (error) {
+            toast.error(
+                `Error fetching special command terminal settings: ${error.message}`
+            );
+            throw error;
+        }
     }
 );
 
 export const saveExecutionTerminalSettingsToDB = createAsyncThunk(
     'terminalSettings/saveExecutionTerminalSettingsToDB',
-    async (executionTerminalSettings, { getState }) => {
+    async (_, { getState }) => {
         const { userData } = getState();
         const userIdentifier = userData.username || userData.userEmailAddress;
-        const response = await axios.get();
+        const currentSettings =
+            getState().terminalSettings.executionTerminalSettings;
 
-        return executionTerminalSettings;
+        const updatedSettings = {
+            themes: { ...currentSettings.themes }, // Merge existing themes
+            selectedThemeName: currentSettings.selectedThemeName, // Preserve selected theme name
+        };
+
+        try {
+            await axios.post(
+                `${BASE_URL}/executionTerminalSettings/updateExecutionTerminalSettings`,
+                {
+                    userIdentifier,
+                    settings: updatedSettings,
+                }
+            );
+            toast.success('Execution terminal settings saved successfully');
+            return updatedSettings;
+        } catch (error) {
+            toast.error(
+                `Error saving execution terminal settings: ${error.message}`
+            );
+            throw error;
+        }
     }
 );
 
 export const saveSpecialCommandTerminalSettingsToDB = createAsyncThunk(
     'terminalSettings/saveSpecialCommandTerminalSettingsToDB',
-    async (specialCommandTerminalSettings, { getState }) => {
+    async (_, { getState }) => {
         const { userData } = getState();
         const userIdentifier = userData.username || userData.userEmailAddress;
-        const response = await axios.get();
+        const currentSettings =
+            getState().terminalSettings.specialCommandTerminalSettings;
 
-        return specialCommandTerminalSettings;
+        const updatedSettings = {
+            themes: { ...currentSettings.themes }, // Merge existing themes
+            selectedThemeName: currentSettings.selectedThemeName, // Preserve selected theme name
+        };
+
+        try {
+            await axios.post(
+                `${BASE_URL}/specialCommandTerminalSettings/updateSpecialCommandTerminalSettings`,
+                {
+                    userIdentifier,
+                    settings: updatedSettings,
+                }
+            );
+            toast.success(
+                'Special command terminal settings saved successfully'
+            );
+            return updatedSettings;
+        } catch (error) {
+            toast.error(
+                `Error saving special command terminal settings: ${error.message}`
+            );
+            throw error;
+        }
     }
 );
 
@@ -143,6 +208,35 @@ const terminalSettingsSlice = createSlice({
             }
         },
         // ... other reducers ...
+    },
+    extraReducers: (builder) => {
+        builder
+            .addCase(
+                fetchExecutionTerminalSettingsFromDB.fulfilled,
+                (state, action) => {
+                    state.executionTerminalSettings =
+                        action.payload.executionTerminalSettings;
+                }
+            )
+            .addCase(
+                fetchSpecialCommandTerminalSettingsFromDB.fulfilled,
+                (state, action) => {
+                    state.specialCommandTerminalSettings =
+                        action.payload.specialCommandTerminalSettings;
+                }
+            )
+            .addCase(
+                saveExecutionTerminalSettingsToDB.fulfilled,
+                (state, action) => {
+                    state.executionTerminalSettings = action.payload;
+                }
+            )
+            .addCase(
+                saveSpecialCommandTerminalSettingsToDB.fulfilled,
+                (state, action) => {
+                    state.specialCommandTerminalSettings = action.payload;
+                }
+            );
     },
 });
 

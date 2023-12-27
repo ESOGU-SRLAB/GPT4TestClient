@@ -1,5 +1,5 @@
 import { useDispatch, useSelector } from 'react-redux';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { ReactTerminal, TerminalContextProvider } from 'react-terminal';
 import {
     Box,
@@ -12,7 +12,6 @@ import {
     Container,
     Button,
     Typography,
-    Divider,
 } from '@mui/material';
 import SplitPane from 'split-pane-react/esm/SplitPane';
 import { Pane } from 'split-pane-react';
@@ -22,7 +21,12 @@ import {
     setExecutionTerminalSelectedThemeName,
     addThemeToSpecialCommandTerminalThemes,
     setSpecialCommandTerminalSelectedThemeName,
+    fetchExecutionTerminalSettingsFromDB,
+    fetchSpecialCommandTerminalSettingsFromDB,
+    saveExecutionTerminalSettingsToDB,
+    saveSpecialCommandTerminalSettingsToDB,
 } from '../../redux/features/terminalSettingsSlice';
+import { toast } from 'react-toastify';
 
 const TerminalSettingsPage = () => {
     const dispatch = useDispatch();
@@ -60,6 +64,11 @@ const TerminalSettingsPage = () => {
     const [sizes, setSizes] = useState(['50%', 'auto']);
     const handleTabChange = (event, tabIndex) => setCurrentTab(tabIndex);
     const [previewThemeName, setPreviewThemeName] = useState('');
+
+    useEffect(() => {
+        dispatch(fetchExecutionTerminalSettingsFromDB());
+        dispatch(fetchSpecialCommandTerminalSettingsFromDB());
+    }, [dispatch]);
 
     const renderTerminalPreviews = () => {
         switch (currentTab) {
@@ -108,6 +117,7 @@ const TerminalSettingsPage = () => {
         switch (currentTab) {
             case 0:
                 setExecutionTerminalPreviewThemeName(selectedThemeName);
+
                 break;
             case 1:
                 setSpecialTerminalPreviewThemeName(selectedThemeName);
@@ -208,7 +218,7 @@ const TerminalSettingsPage = () => {
                         variant="subtitle1"
                         sx={{ fontWeight: 'bold', color: 'primary.main' }}
                     >
-                        Theme Color
+                        Text Color
                     </Typography>
                     <SketchPicker
                         color={themeColors.themeColor}
@@ -249,26 +259,34 @@ const TerminalSettingsPage = () => {
         setPreviewThemeName(event.target.value);
     };
 
-    const handleSelectColorTheme = () => {
-        switch (currentTab) {
-            case 0:
-                dispatch(
-                    setExecutionTerminalSelectedThemeName(
-                        executionTerminalPreviewThemeName
-                    )
-                );
-                break;
-            case 1:
-                dispatch(
-                    setSpecialCommandTerminalSelectedThemeName(
-                        specialTerminalPreviewThemeName
-                    )
-                );
+    const handleSelectColorTheme = async () => {
+        const themeName =
+            currentTab === 0
+                ? executionTerminalPreviewThemeName
+                : specialTerminalPreviewThemeName;
+        console.log(`Dispatching to set theme name: ${themeName}`);
+
+        if (currentTab === 0) {
+            dispatch(setExecutionTerminalSelectedThemeName(themeName));
+            dispatch(
+                saveExecutionTerminalSettingsToDB(executionTerminalSettings)
+            );
+        } else {
+            dispatch(setSpecialCommandTerminalSelectedThemeName(themeName));
+            dispatch(
+                saveSpecialCommandTerminalSettingsToDB(
+                    specialCommandTerminalSettings
+                )
+            );
         }
     };
 
     const handleAddColorTheme = () => {
         const themeName = previewThemeName;
+        if (themeName.trim().length === 0) {
+            toast.warning('Theme name cannot be empty or only spaces!');
+            return;
+        }
         switch (currentTab) {
             case 0:
                 dispatch(
@@ -277,6 +295,10 @@ const TerminalSettingsPage = () => {
                         theme: executionTerminalPreviewThemeColors,
                     })
                 );
+                dispatch(
+                    saveExecutionTerminalSettingsToDB(executionTerminalSettings)
+                );
+
                 break;
             case 1:
                 dispatch(
@@ -285,9 +307,15 @@ const TerminalSettingsPage = () => {
                         theme: specialCommandTerminalPreviewThemeColors,
                     })
                 );
+                dispatch(
+                    saveSpecialCommandTerminalSettingsToDB(
+                        specialCommandTerminalSettings
+                    )
+                );
                 break;
         }
     };
+
     return (
         <Box height="100vh" display="flex" flexDirection="column">
             <SplitPane split="horizontal" sizes={sizes} onChange={setSizes}>

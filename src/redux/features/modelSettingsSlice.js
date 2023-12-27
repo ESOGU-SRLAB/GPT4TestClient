@@ -8,7 +8,7 @@ export const fetchModelSettingsFromDB = createAsyncThunk(
         const userIdentifier = userData.username || userData.userEmailAddress;
 
         const response = await axios.get(
-            `http://localhost:5000/api/users/getModelSettings/${userIdentifier}`
+            `http://localhost:5000/api/users/modelSettings/getModelSettings/${userIdentifier}`
         );
 
         return response.data.settings; // Assuming the settings are returned under a `settings` key
@@ -22,7 +22,7 @@ export const saveModelSettingsToDB = createAsyncThunk(
         console.log(userData, settings);
         const userIdentifier = userData.username || userData.userEmailAddress;
         const response = await axios.post(
-            'http://localhost:5000/api/users/updateModelSettings',
+            'http://localhost:5000/api/users/modelSettings/updateModelSettings',
             {
                 settings,
                 userIdentifier,
