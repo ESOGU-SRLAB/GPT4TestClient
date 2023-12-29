@@ -14,6 +14,11 @@ import {
 } from '../../redux/features/terminalSettingsSlice';
 import ExecutionTerminal from './ExecutionTerminal';
 import SpecialCommandTerminal from './SpecialCommandTerminal';
+import {
+    updateInputEditorContent,
+    updateOutputEditorContent,
+} from '../../redux/features/editorContentsSlice';
+import { toast } from 'react-toastify';
 
 const UnitTestGenerationPage = () => {
     const dispatch = useDispatch();
@@ -21,18 +26,42 @@ const UnitTestGenerationPage = () => {
     const toggleRightSidebar = () => {
         setRightSidebarOpen(!isRightSidebarOpen);
     };
+
+    useEffect(() => {
+        // Define the keydown event handler
+        const handleKeyDown = (event) => {
+            if (
+                event.ctrlKey &&
+                (event.key.toLowerCase() === 's' || event.keyCode === 83)
+            ) {
+                event.preventDefault();
+                toast.info('We save it for you, no worries 😏');
+            }
+        };
+        window.addEventListener('keydown', handleKeyDown);
+        return () => {
+            window.removeEventListener('keydown', handleKeyDown);
+        };
+    }, []);
+
     useEffect(() => {
         dispatch(fetchModelSettingsFromDB());
         dispatch(fetchEditorSettingsFromDB());
         dispatch(fetchExecutionTerminalSettingsFromDB());
         dispatch(fetchSpecialCommandTerminalSettingsFromDB());
     }, [dispatch]);
-    const [inputCode, setInputCode] = useState('# type your code here');
-    const [outputCode, setOutputCode] = useState(
-        '# AI generated code will appear here'
-    );
+
     const [editorSizes, setEditorSizes] = useState(['50%', 'auto']);
     const [terminalSizes, setTerminalSizes] = useState(['50%', 'auto']);
+
+    const inputEditorContent = useSelector(
+        (state) => state.editorContents.inputEditorContent.editorContent
+    );
+
+    const outputEditorContent = useSelector(
+        (state) => state.editorContents.outputEditorContent.editorContent
+    );
+
     const inputEditorOptions = useSelector(
         (state) => state.editorSettings.inputEditorOptions
     );
@@ -40,9 +69,16 @@ const UnitTestGenerationPage = () => {
         (state) => state.editorSettings.outputEditorOptions
     );
 
+    const handleInputEditorChange = (editorContent) => {
+        dispatch(updateInputEditorContent(editorContent));
+    };
+
+    const handleOutputEditorChange = (editorContent) => {
+        dispatch(updateOutputEditorContent(editorContent));
+    };
+
     return (
         <>
-            {' '}
             {!isRightSidebarOpen && (
                 <FloatingButtonRight onClick={toggleRightSidebar} />
             )}
@@ -75,8 +111,8 @@ const UnitTestGenerationPage = () => {
                                 height="100%"
                                 theme="vs-light"
                                 language="python"
-                                value={inputCode}
-                                onChange={setInputCode}
+                                value={inputEditorContent}
+                                onChange={handleInputEditorChange}
                                 loading={<EditorLoadingScreen />}
                                 options={inputEditorOptions}
                             />
@@ -87,7 +123,8 @@ const UnitTestGenerationPage = () => {
                             height="100%"
                             theme="vs-light"
                             language="python"
-                            value={outputCode}
+                            value={outputEditorContent}
+                            onChange={handleOutputEditorChange}
                             options={outputEditorOptions}
                             loading={<EditorLoadingScreen />}
                         />

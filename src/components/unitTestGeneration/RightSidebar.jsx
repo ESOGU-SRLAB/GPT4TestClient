@@ -19,6 +19,7 @@ import {
     updateSettings,
     saveModelSettingsToDB,
 } from '../../redux/features/modelSettingsSlice';
+import { toast } from 'react-toastify';
 
 const RightSidebar = ({ open, toggleSidebar }) => {
     const dispatch = useDispatch();
@@ -28,6 +29,13 @@ const RightSidebar = ({ open, toggleSidebar }) => {
         setSettings(savedSettings);
     }, [savedSettings]);
 
+    const parametersMinMaxValues = {
+        temperature: [0, 2],
+        topP: [0, 1],
+        frequencyPenalty: [0, 2],
+        presencePenalty: [0, 2],
+    };
+
     const handleSettingsChange = (prop) => (event) => {
         if (prop === 'modelSelection') {
             setSettings({
@@ -35,8 +43,36 @@ const RightSidebar = ({ open, toggleSidebar }) => {
                 modelSelection: event.target.value,
                 maxLength: modelNameMaxLengthPairs[event.target.value],
             });
+        } else if (prop === 'maxLength') {
+            let newValue;
+            try {
+                newValue = parseInt(event.target.value);
+            } catch (error) {
+                toast.warning('Max Length must be integer number!');
+                return;
+            }
+            const [minValue, maxValue] = [
+                0,
+                modelNameMaxLengthPairs[settings.modelSelection],
+            ];
+            if (newValue >= minValue && newValue <= maxValue) {
+                setSettings({ ...settings, maxLength: newValue });
+                return;
+            }
+            toast.warning(
+                `Max Length value must be in [${minValue}, ${maxValue}] boundaries for ${settings.modelSelection} model`
+            );
         } else {
-            setSettings({ ...settings, [prop]: event.target.value });
+            const [minValue, maxValue] = parametersMinMaxValues[prop];
+            const newValue = parseFloat(event.target.value);
+
+            if (newValue >= minValue && newValue <= maxValue) {
+                setSettings({ ...settings, [prop]: newValue });
+                return;
+            }
+            toast.warning(
+                `${prop} value must be in [${minValue}, ${maxValue}] boundaries!`
+            );
         }
     };
 
@@ -155,8 +191,6 @@ const RightSidebar = ({ open, toggleSidebar }) => {
                                     )}
                                     inputProps={{
                                         step: 0.01,
-                                        min: 0, // Set the minimum value according to your requirements
-                                        max: 2, // Set the maximum value according to your requirements
                                     }}
                                     sx={{ width: '50%' }}
                                 />
@@ -191,9 +225,7 @@ const RightSidebar = ({ open, toggleSidebar }) => {
                                     value={settings.maxLength}
                                     onChange={handleSettingsChange('maxLength')}
                                     inputProps={{
-                                        step: 0.01,
-                                        min: 0, // Set the minimum value according to your requirements
-                                        max: 2, // Set the maximum value according to your requirements
+                                        step: 1,
                                     }}
                                     sx={{ width: '50%' }}
                                 />
@@ -263,8 +295,6 @@ const RightSidebar = ({ open, toggleSidebar }) => {
                                     onChange={handleSettingsChange('topP')}
                                     inputProps={{
                                         step: 0.01,
-                                        min: 0, // Set the minimum value according to your requirements
-                                        max: 2, // Set the maximum value according to your requirements
                                     }}
                                     sx={{ width: '50%' }}
                                 />
@@ -274,7 +304,7 @@ const RightSidebar = ({ open, toggleSidebar }) => {
                                     aria-labelledby="top-p-slider"
                                     color="info"
                                     min={0}
-                                    max={2}
+                                    max={1}
                                     step={0.01}
                                 />
                             </Box>
@@ -302,8 +332,6 @@ const RightSidebar = ({ open, toggleSidebar }) => {
                                     )}
                                     inputProps={{
                                         step: 0.01,
-                                        min: 0, // Set the minimum value according to your requirements
-                                        max: 2, // Set the maximum value according to your requirements
                                     }}
                                     sx={{ width: '50%' }}
                                 />
@@ -343,8 +371,6 @@ const RightSidebar = ({ open, toggleSidebar }) => {
                                     )}
                                     inputProps={{
                                         step: 0.01,
-                                        min: 0, // Set the minimum value according to your requirements
-                                        max: 2, // Set the maximum value according to your requirements
                                     }}
                                     sx={{ width: '50%' }}
                                 />

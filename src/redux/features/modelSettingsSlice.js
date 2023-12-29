@@ -11,7 +11,7 @@ export const fetchModelSettingsFromDB = createAsyncThunk(
             `http://localhost:5000/api/users/modelSettings/getModelSettings/${userIdentifier}`
         );
 
-        return response.data.settings; // Assuming the settings are returned under a `settings` key
+        return response.data.modelSettings; // Assuming the settings are returned under a `settings` key
     }
 );
 
