@@ -9,6 +9,15 @@ import {
     createNewSession,
 } from '../../redux/features/editorContentsSlice';
 
+import {
+    increaseUnitTestGenerationSuccessCount,
+    increaseUnitTestGenerationFailureCount,
+    increaseUnitTestExecutionSuccessCount,
+    increaseUnitTestExecutionFailureCount,
+    saveUserActionsRecapDataToDB,
+    fetchUserActionsRecapDataFromDB,
+} from '../../redux/features/userActionsRecapSlice';
+import { useEffect } from 'react';
 const ExecutionTerminal = () => {
     const dispatch = useDispatch();
     const executionTerminalSettings = useSelector(
@@ -35,11 +44,18 @@ const ExecutionTerminal = () => {
                 testFunction: outputEditorContent,
             });
             const { code, executionResult } = response.data;
-
-            // Dispatch the combined thunk
-            dispatch(saveTestExecutionResultsToDB(executionResult));
-
-            return `${executionResult}`;
+            if (code === '200') {
+                // Dispatch the combined thunk
+                dispatch(saveTestExecutionResultsToDB(executionResult));
+                dispatch(increaseUnitTestExecutionSuccessCount());
+                dispatch(saveUserActionsRecapDataToDB());
+                return `${executionResult}`;
+            } else {
+                dispatch(saveTestExecutionResultsToDB(executionResult));
+                dispatch(increaseUnitTestExecutionFailureCount());
+                dispatch(saveUserActionsRecapDataToDB());
+                return `${executionResult}`;
+            }
         } catch (error) {
             console.error(error.message);
         }
@@ -62,11 +78,17 @@ const ExecutionTerminal = () => {
             );
             const { code, testFunction } = response.data;
             dispatch(updateOutputEditorContent(testFunction));
-            console.log('HERE!');
-            dispatch(saveTestGenerationResults());
-            if (code === '200')
+            if (code === '200') {
+                dispatch(saveTestGenerationResults());
+                dispatch(increaseUnitTestGenerationSuccessCount());
+                dispatch(saveUserActionsRecapDataToDB());
                 return `${code} Generated unit test code successfully!`;
-            else return `${code} Failed unit tese generation!`;
+            } else {
+                dispatch(saveTestGenerationResults());
+                dispatch(increaseUnitTestGenerationFailureCount());
+                dispatch(saveUserActionsRecapDataToDB());
+                return `${code} Failed unit tese generation!`;
+            }
         } catch (error) {
             console.error('Error:', error);
             return 'Failed to generate test.';
@@ -90,6 +112,9 @@ const ExecutionTerminal = () => {
             }
         },
     };
+    useEffect(() => {
+        dispatch(fetchUserActionsRecapDataFromDB());
+    }, [dispatch]);
 
     return (
         <TerminalContextProvider>
