@@ -21,6 +21,7 @@ import UnitTestIcon from '../assets/sidebarIcons/unittest.png';
 import HistoryIcon from '../assets/sidebarIcons/history.png';
 import TerminaIcon from '../assets/sidebarIcons/terminal.png';
 import CompareIcon from '../assets/sidebarIcons/compare.png';
+import FormIcon from '../assets/sidebarIcons/form.png';
 import { resetUserData } from '../redux/features/userDataSlice';
 import { resetEditorContents } from '../redux/features/editorContentsSlice';
 import { resetEditorSettings } from '../redux/features/editorSettingsSlice';
@@ -53,18 +54,6 @@ const Sidebar = ({ open, toggleSidebar }) => {
             ),
         },
         {
-            primaryText: 'Model Comparison',
-            secondaryText:
-                'Compare LLM models including Llama, Mixtral, Gemini & GPT',
-            to: '/model-comparison',
-            image: (
-                <img
-                    src={CompareIcon}
-                    style={{ width: '24px', height: '24px' }}
-                />
-            ),
-        },
-        {
             primaryText: 'Unit Test Generation',
             secondaryText:
                 'Write or upload your own Python code, generate unit tests & run to see the results.',
@@ -72,6 +61,18 @@ const Sidebar = ({ open, toggleSidebar }) => {
             image: (
                 <img
                     src={UnitTestIcon}
+                    style={{ width: '24px', height: '24px' }}
+                />
+            ),
+        },
+        {
+            primaryText: 'Model Comparison',
+            secondaryText:
+                'Compare LLM models including Llama, Mixtral, Gemini & GPT',
+            to: '/model-comparison',
+            image: (
+                <img
+                    src={CompareIcon}
                     style={{ width: '24px', height: '24px' }}
                 />
             ),
@@ -110,6 +111,14 @@ const Sidebar = ({ open, toggleSidebar }) => {
                     src={HistoryIcon}
                     style={{ width: '24px', height: '24px' }}
                 />
+            ),
+        },
+        {
+            primaryText: 'Model Comparison History',
+            secondaryText: 'List your recent model comparisons',
+            to: '/comparison-history',
+            image: (
+                <img src={FormIcon} style={{ width: '24px', height: '24px' }} />
             ),
         },
         {

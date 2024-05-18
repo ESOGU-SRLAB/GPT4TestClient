@@ -5,22 +5,10 @@ import ChartNodeDialog from './chartNodeDialog';
 
 // eslint-disable-next-line react/prop-types
 const MetricsPieChart = ({ comparisonResults, metric }) => {
-    const getFillList = (comparisonResults) => {
-        // eslint-disable-next-line react/prop-types
-        let fillList = comparisonResults.map((item, index) => {
-            let fillType = index % 2 ? 'dots' : 'lines';
-            return {
-                match: {
-                    id: item.id,
-                },
-                id: fillType,
-            };
-        });
-        return fillList;
-    };
-    const [selectedLines, setSelectedLines] = useState([
-        ...comparisonResults.map((item) => item.id),
-    ]);
+    const [selectedLines, setSelectedLines] = useState(
+        comparisonResults.map((item) => item.id)
+    );
+
     const handleLegendClick = (node) => {
         setSelectedLines((prevSelectedLines) =>
             prevSelectedLines.includes(node.id)
@@ -30,21 +18,19 @@ const MetricsPieChart = ({ comparisonResults, metric }) => {
     };
 
     const dataFormatter = (list) => {
-        let formattedData = list
+        return list
             .filter((item) => selectedLines.includes(item.id))
-            .map((item) => {
-                return {
-                    id: item.id,
-                    label: item.id,
-                    value: item[metric],
-                };
-            });
-        return formattedData;
+            .map((item) => ({
+                id: item.id,
+                label: item.id,
+                value: item[metric],
+            }));
     };
 
     const [dialogOpen, setDialogOpen] = useState(false);
-    const [node, setNode] = useState([]);
+    const [node, setNode] = useState(null);
     const data = dataFormatter(comparisonResults);
+
     return (
         <Grid item sx={{ width: '100%', height: '50vh' }}>
             <ResponsivePie
@@ -73,27 +59,6 @@ const MetricsPieChart = ({ comparisonResults, metric }) => {
                     from: 'color',
                     modifiers: [['darker', 2]],
                 }}
-                fill={getFillList(comparisonResults)}
-                defs={[
-                    {
-                        id: 'dots',
-                        type: 'patternDots',
-                        background: 'inherit',
-                        color: 'rgba(255, 255, 255, 0.3)',
-                        size: 4,
-                        padding: 1,
-                        stagger: true,
-                    },
-                    {
-                        id: 'lines',
-                        type: 'patternLines',
-                        background: 'inherit',
-                        color: '#eed312',
-                        rotation: -45,
-                        lineWidth: 6,
-                        spacing: 10,
-                    },
-                ]}
                 legends={[
                     {
                         anchor: 'top-left',
@@ -118,7 +83,7 @@ const MetricsPieChart = ({ comparisonResults, metric }) => {
                 ]}
             />
             <ChartNodeDialog
-                id={node.id}
+                id={node?.id}
                 dialogOpen={dialogOpen}
                 setDialogOpen={setDialogOpen}
             />

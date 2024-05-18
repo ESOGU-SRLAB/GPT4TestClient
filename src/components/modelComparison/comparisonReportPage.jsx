@@ -20,10 +20,14 @@ const TabPanel = ({ children, value, index }) => {
     );
 };
 
-const ComparisonReportPage = () => {
-    const comparisonResults = useSelector(
+// eslint-disable-next-line react/prop-types
+const ComparisonReportPage = ({ comparisonResultsIndividual }) => {
+    const reduxComparisonResults = useSelector(
         (state) => state.toCompareList.comparisonResults
     );
+
+    let comparisonResults =
+        comparisonResultsIndividual || reduxComparisonResults;
     const [uniqueParamCountTabIndex, setUniqueParamCountTabIndex] = useState(1);
     const [assertionCountTabIndex, setAssertionCountTabIndex] = useState(1);
     const [uniqueVariableCountTabIndex, setUniqueVariableCountTabIndex] =
@@ -35,10 +39,10 @@ const ComparisonReportPage = () => {
         <Grid
             container
             sx={{
-                width: '100vw',
+                width: '95vw',
                 height: '100vh',
                 overflowY: 'auto',
-                gap: '5vw',
+                rowGap: '10vh',
                 justifyContent: 'center',
             }}
         >
@@ -54,7 +58,7 @@ const ComparisonReportPage = () => {
             >
                 <p>COMPARISON REPORTs</p>
             </Typography>
-            <Grid item sx={{ width: '45vw', height: '50vh' }}>
+            <Grid item xs={12} lg={6} sx={{ height: '50vh' }}>
                 <RadarChart comparisonResults={comparisonResults} />
             </Grid>
             {/* <Grid item sx={{ width: '45vw', height: '50vh' }}>
@@ -64,13 +68,7 @@ const ComparisonReportPage = () => {
                 />
             </Grid> */}
 
-            <Grid
-                item
-                sx={{
-                    width: '45vw',
-                    height: '50vh',
-                }}
-            >
+            <Grid item xs={12} lg={6} sx={{ height: '50vh' }}>
                 <Tabs
                     value={uniqueParamCountTabIndex}
                     onChange={(event, newIndex) => {
@@ -103,13 +101,7 @@ const ComparisonReportPage = () => {
                     />
                 </TabPanel>
             </Grid>
-            <Grid
-                item
-                sx={{
-                    width: '45vw',
-                    height: '50vh',
-                }}
-            >
+            <Grid item xs={12} lg={6} sx={{ height: '50vh' }}>
                 <Tabs
                     value={assertionCountTabIndex}
                     onChange={(event, newIndex) => {
@@ -143,13 +135,7 @@ const ComparisonReportPage = () => {
                 </TabPanel>
             </Grid>
 
-            <Grid
-                item
-                sx={{
-                    width: '45vw',
-                    height: '50vh',
-                }}
-            >
+            <Grid item xs={12} lg={6} sx={{ height: '50vh' }}>
                 <Tabs
                     value={codeLengthTabIndex}
                     onChange={(event, newIndex) => {
@@ -182,13 +168,7 @@ const ComparisonReportPage = () => {
                     />
                 </TabPanel>
             </Grid>
-            <Grid
-                item
-                sx={{
-                    width: '45vw',
-                    height: '50vh',
-                }}
-            >
+            <Grid item xs={12} lg={6} sx={{ height: '50vh' }}>
                 <Tabs
                     value={uniqueVariableCountTabIndex}
                     onChange={(event, newIndex) => {
@@ -222,13 +202,7 @@ const ComparisonReportPage = () => {
                 </TabPanel>
             </Grid>
 
-            <Grid
-                item
-                sx={{
-                    width: '45vw',
-                    height: '50vh',
-                }}
-            >
+            <Grid item xs={12} lg={6} sx={{ height: '50vh' }}>
                 <Tabs
                     value={elapsedTimeTabIndex}
                     onChange={(event, newIndex) => {

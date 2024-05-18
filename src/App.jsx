@@ -17,6 +17,7 @@ import AccountPage from './components/account/AccountPage';
 import TerminalSettingsPage from './components/terminalSettings/TerminalSettingsPage';
 import ModelComparisonPage from './components/modelComparison/modelComparisonPage';
 import ComparisonReportPage from './components/modelComparison/comparisonReportPage';
+import ModelComparisonHistoryPage from './components/modelComparison/modelComparisonHistoryPage';
 
 function App() {
     return (
@@ -64,6 +65,16 @@ function App() {
                         <ProtectedRoute>
                             <AuthenticatedLayout>
                                 <ComparisonReportPage />
+                            </AuthenticatedLayout>
+                        </ProtectedRoute>
+                    }
+                />
+                <Route
+                    path="/comparison-history"
+                    element={
+                        <ProtectedRoute>
+                            <AuthenticatedLayout>
+                                <ModelComparisonHistoryPage />
                             </AuthenticatedLayout>
                         </ProtectedRoute>
                     }

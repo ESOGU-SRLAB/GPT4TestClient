@@ -3,6 +3,34 @@ import axios from 'axios';
 import { toast } from 'react-toastify';
 import { v4 as uuidv4 } from 'uuid';
 
+const saveComparisonResultToDB = createAsyncThunk(
+    'toCompareList/saveComparisonResultToDB',
+    async (_, { getState, isRejectedWithValue }) => {
+        const { userData } = getState();
+        const userIdentifier = userData.username || userData.userEmailAddress;
+        const { focalCode, toCompareList, comparisonResults } =
+            getState().toCompareList;
+        const dateTimestamp = Date.now();
+        const data = {
+            userIdentifier,
+            dateTimestamp,
+            focalCode,
+            toCompareList,
+            comparisonResults,
+        };
+
+        try {
+            const response = await axios.post(
+                'http://localhost:5000/api/users/comparisonResults/saveComparisonResult',
+                data
+            );
+            return response.data;
+        } catch (error) {
+            return isRejectedWithValue(error.response.data);
+        }
+    }
+);
+
 export const sendModelsToComparison = createAsyncThunk(
     'toCompareList/sendModelsToComparison',
     async (_, { getState, dispatch }) => {
@@ -36,6 +64,7 @@ export const sendModelsToComparison = createAsyncThunk(
 
         // Dispatch an action to update the Redux state with all results
         dispatch(setComparisonResults(comparisonResults));
+        dispatch(saveComparisonResultToDB());
     }
 );
 
@@ -74,9 +103,16 @@ export const toCompareListSlice = createSlice({
         },
     },
     extraReducers: (builder) => {
-        builder.addCase(sendModelsToComparison.fulfilled, (state, action) => {
-            return { ...state, ...action.payload };
-        });
+        builder
+            .addCase(sendModelsToComparison.fulfilled, (state, action) => {
+                return { ...state, ...action.payload };
+            })
+            .addCase(saveComparisonResultToDB.fulfilled, () => {
+                toast.success('Comparison result saved successfully!');
+            })
+            .addCase(saveComparisonResultToDB.rejected, () => {
+                toast.error('Failed to save comparison result!');
+            });
     },
 });
 

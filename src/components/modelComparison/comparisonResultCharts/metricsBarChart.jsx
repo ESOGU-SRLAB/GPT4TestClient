@@ -3,41 +3,20 @@ import { ResponsiveBar } from '@nivo/bar';
 
 // eslint-disable-next-line react/prop-types
 const MetricsBarChart = ({ comparisonResults, metric }) => {
-    const getFillList = (comparisonResults) => {
-        // eslint-disable-next-line react/prop-types
-        let fillList = comparisonResults.map(() => {
-            let fillType = 'lines';
-            return {
-                match: {
-                    id: 'metric',
-                },
-                id: fillType,
-            };
-        });
-        return fillList;
-    };
     const dataFormatter = (list) => {
-        let formattedData = list.map((item) => {
-            return {
-                model: item.id,
-                label: item.id,
-                metric: item[metric],
-            };
-        });
-        return formattedData;
+        return list.map((item) => ({
+            model: item.id,
+            label: item.id,
+            metric: item[metric],
+        }));
     };
+
     const data = dataFormatter(comparisonResults);
+
     const yLabelFormatter = (metric) => {
-        let label = metric[0].toUpperCase();
-        for (let char of metric.slice(1, metric.length)) {
-            if (char === char.toUpperCase()) {
-                label += ` ${char}`;
-                continue;
-            }
-            label += char;
-        }
-        return label;
+        return metric.charAt(0).toUpperCase() + metric.slice(1);
     };
+
     return (
         <Grid item sx={{ width: '100%', height: '50vh' }}>
             <ResponsiveBar
@@ -48,29 +27,8 @@ const MetricsBarChart = ({ comparisonResults, metric }) => {
                 padding={0.3}
                 valueScale={{ type: 'linear' }}
                 indexScale={{ type: 'band', round: true }}
-                // colors={{ scheme: 'nivo' }}
+                colors={{ scheme: 'category10' }} // Use a consistent color scheme
                 colorBy="indexValue"
-                defs={[
-                    {
-                        id: 'dots',
-                        type: 'patternDots',
-                        background: 'inherit',
-                        color: '#38bcb2',
-                        size: 4,
-                        padding: 1,
-                        stagger: true,
-                    },
-                    {
-                        id: 'lines',
-                        type: 'patternLines',
-                        background: 'inherit',
-                        color: '#eed312',
-                        rotation: -45,
-                        lineWidth: 6,
-                        spacing: 10,
-                    },
-                ]}
-                fill={getFillList(comparisonResults)}
                 borderColor={{
                     from: 'color',
                     modifiers: [['darker', 1.6]],
