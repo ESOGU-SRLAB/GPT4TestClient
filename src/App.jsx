@@ -15,6 +15,8 @@ import EditorSettingsPage from './components/editorSettings/EditorSettingsPage';
 import UnitTestGenerationHistoryPage from './components/unitTestGenerationHistory/UnitTestGenerationHistoryPage';
 import AccountPage from './components/account/AccountPage';
 import TerminalSettingsPage from './components/terminalSettings/TerminalSettingsPage';
+import ModelComparisonPage from './components/modelComparison/modelComparisonPage';
+import ComparisonReportPage from './components/modelComparison/comparisonReportPage';
 
 function App() {
     return (
@@ -42,6 +44,26 @@ function App() {
                         <ProtectedRoute>
                             <AuthenticatedLayout>
                                 <DashboardPage />
+                            </AuthenticatedLayout>
+                        </ProtectedRoute>
+                    }
+                />
+                <Route
+                    path="/model-comparison"
+                    element={
+                        <ProtectedRoute>
+                            <AuthenticatedLayout>
+                                <ModelComparisonPage />
+                            </AuthenticatedLayout>
+                        </ProtectedRoute>
+                    }
+                />
+                <Route
+                    path="/comparison-report"
+                    element={
+                        <ProtectedRoute>
+                            <AuthenticatedLayout>
+                                <ComparisonReportPage />
                             </AuthenticatedLayout>
                         </ProtectedRoute>
                     }

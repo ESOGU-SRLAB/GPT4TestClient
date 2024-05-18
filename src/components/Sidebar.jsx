@@ -9,17 +9,36 @@ import {
     ListItemText,
     Typography,
     Divider,
+    useMediaQuery,
+    IconButton,
 } from '@mui/material';
 import { Link as RouterLink } from 'react-router-dom';
-
+import { useTheme } from '@mui/material/styles';
 import DashboardIcon from '../assets/sidebarIcons/dashboard.png';
 import AccountIcon from '../assets/sidebarIcons/account.png';
 import EditorIcon from '../assets/sidebarIcons/editor.png';
 import UnitTestIcon from '../assets/sidebarIcons/unittest.png';
 import HistoryIcon from '../assets/sidebarIcons/history.png';
 import TerminaIcon from '../assets/sidebarIcons/terminal.png';
+import CompareIcon from '../assets/sidebarIcons/compare.png';
+import { resetUserData } from '../redux/features/userDataSlice';
+import { resetEditorContents } from '../redux/features/editorContentsSlice';
+import { resetEditorSettings } from '../redux/features/editorSettingsSlice';
+import { resetModelSettings } from '../redux/features/modelSettingsSlice';
+import { resetTerminalSettings } from '../redux/features/terminalSettingsSlice';
+import { resetTestGenerationAndExecutionHistory } from '../redux/features/testGenerationAndExecutionHistorySlice';
+import { resetUserActionsRecap } from '../redux/features/userActionsRecapSlice';
+import { handleLogout } from '../redux/features/userDataSlice';
+import { useDispatch } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
+import LogOutIcon from '../assets/sidebarIcons/logout.png';
 
 const Sidebar = ({ open, toggleSidebar }) => {
+    const theme = useTheme();
+    const isLargeScreen = useMediaQuery(theme.breakpoints.up('lg'));
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
+
     const sidebarRoutingItems = [
         {
             primaryText: 'Dashboard',
@@ -29,6 +48,18 @@ const Sidebar = ({ open, toggleSidebar }) => {
             image: (
                 <img
                     src={DashboardIcon}
+                    style={{ width: '24px', height: '24px' }}
+                />
+            ),
+        },
+        {
+            primaryText: 'Model Comparison',
+            secondaryText:
+                'Compare LLM models including Llama, Mixtral, Gemini & GPT',
+            to: '/model-comparison',
+            image: (
+                <img
+                    src={CompareIcon}
                     style={{ width: '24px', height: '24px' }}
                 />
             ),
@@ -94,6 +125,16 @@ const Sidebar = ({ open, toggleSidebar }) => {
             ),
         },
     ];
+    const onLogoutClick = () => {
+        dispatch(resetUserData());
+        dispatch(resetEditorContents());
+        dispatch(resetEditorSettings());
+        dispatch(resetModelSettings());
+        dispatch(resetTerminalSettings());
+        dispatch(resetTestGenerationAndExecutionHistory());
+        dispatch(resetUserActionsRecap());
+        dispatch(handleLogout(navigate));
+    };
     return (
         <>
             <SwipeableDrawer
@@ -102,8 +143,17 @@ const Sidebar = ({ open, toggleSidebar }) => {
                 onClose={toggleSidebar}
                 onOpen={toggleSidebar}
             >
-                <Box sx={{ width: 400 }} role="presentation" mb={5}>
-                    <Box sx={{ padding: 2, textAlign: 'center' }}>
+                <Box
+                    role="presentation"
+                    mb={5}
+                    sx={{ width: isLargeScreen ? 500 : '80vw' }}
+                >
+                    <Box
+                        sx={{
+                            padding: 2,
+                            textAlign: 'center',
+                        }}
+                    >
                         <Typography variant="h5">Navigation</Typography>
                     </Box>
                     <Divider />
@@ -147,6 +197,27 @@ const Sidebar = ({ open, toggleSidebar }) => {
                             );
                         })}
                     </List>
+                    <IconButton
+                        onClick={onLogoutClick}
+                        sx={{
+                            display: 'block',
+                            marginLeft: 'auto',
+                            marginRight: 'auto',
+                            marginTop: '1rem',
+                            width: '7rem',
+                            height: '7rem',
+                        }}
+                    >
+                        <img
+                            src={LogOutIcon}
+                            alt="Arrow Icon"
+                            style={{
+                                width: '3rem',
+                                height: '3rem',
+                                objectFit: 'contain',
+                            }}
+                        />
+                    </IconButton>
                 </Box>
             </SwipeableDrawer>
         </>
