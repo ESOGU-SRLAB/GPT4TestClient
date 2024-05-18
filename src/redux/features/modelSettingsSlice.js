@@ -1,5 +1,6 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
+import { toast } from 'react-toastify';
 
 export const fetchModelSettingsFromDB = createAsyncThunk(
     'modelSettings/fetchModelSettingsFromDB',
@@ -18,17 +19,23 @@ export const fetchModelSettingsFromDB = createAsyncThunk(
 export const saveModelSettingsToDB = createAsyncThunk(
     'modelSettings/saveModelSettingsToDB',
     async (settings, { getState }) => {
-        const { userData } = getState();
-        console.log(userData, settings);
-        const userIdentifier = userData.username || userData.userEmailAddress;
-        const response = await axios.post(
-            'http://localhost:5000/api/users/modelSettings/updateModelSettings',
-            {
-                settings,
-                userIdentifier,
-            }
-        );
-        return response.data;
+        try {
+            const { userData } = getState();
+            console.log(userData, settings);
+            const userIdentifier =
+                userData.username || userData.userEmailAddress;
+            const response = await axios.post(
+                'http://localhost:5000/api/users/modelSettings/updateModelSettings',
+                {
+                    settings,
+                    userIdentifier,
+                }
+            );
+            toast.success('Model settings save succeed!');
+            return response.data;
+        } catch (error) {
+            toast.error(`Model settings save failed! ${error.message}`);
+        }
     }
 );
 
@@ -50,7 +57,14 @@ export const modelSettingsSlice = createSlice({
             return { ...state, ...action.payload };
         },
         resetModelSettings: (state) => {
-            return initialState;
+            state.modelSelection = initialState.modelSelection;
+            state.temperature = initialState.temperature;
+            state.maxLength = initialState.maxLength;
+            state.stopSequences = initialState.stopSequences;
+            state.topP = initialState.topP;
+            state.frequencyPenalty = initialState.frequencyPenalty;
+            state.presencePenalty = initialState.presencePenalty;
+            return state;
         },
     },
     extraReducers: (builder) => {

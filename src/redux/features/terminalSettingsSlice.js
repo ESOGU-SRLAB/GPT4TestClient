@@ -71,7 +71,6 @@ export const saveExecutionTerminalSettingsToDB = createAsyncThunk(
                     settings: updatedSettings,
                 }
             );
-            toast.success('Execution terminal settings saved successfully');
             return updatedSettings;
         } catch (error) {
             toast.error(
@@ -102,9 +101,6 @@ export const saveSpecialCommandTerminalSettingsToDB = createAsyncThunk(
                     userIdentifier,
                     settings: updatedSettings,
                 }
-            );
-            toast.success(
-                'Special command terminal settings saved successfully'
             );
             return updatedSettings;
         } catch (error) {
@@ -207,7 +203,13 @@ const terminalSettingsSlice = createSlice({
                 toast.error(`Theme '${payload}' does not exist`);
             }
         },
-        // ... other reducers ...
+        resetTerminalSettings: (state) => {
+            state.executionTerminalSettings =
+                initialState.executionTerminalSettings;
+            state.specialCommandTerminalSettings =
+                initialState.specialCommandTerminalSettings;
+            return state;
+        },
     },
     extraReducers: (builder) => {
         builder
@@ -247,6 +249,7 @@ export const {
     addThemeToSpecialCommandTerminalThemes,
     removeThemeFromExecutionTerminalThemes,
     removeThemeFromSpecialCommandTerminalThemes,
+    resetTerminalSettings,
 } = terminalSettingsSlice.actions;
 
 export default terminalSettingsSlice.reducer;

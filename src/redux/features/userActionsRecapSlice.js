@@ -65,6 +65,17 @@ export const userActionsRecapSlice = createSlice({
         increaseUnitTestExecutionFailureCount: (state, action) => {
             state.unitTestExecutionFailureCount += 1;
         },
+        resetUserActionsRecap: (state) => {
+            state.unitTestGenerationFailureCount =
+                initialState.unitTestGenerationFailureCount;
+            state.unitTestGenerationSuccessCount =
+                initialState.unitTestGenerationSuccessCount;
+            state.unitTestExecutionSuccessCount =
+                initialState.unitTestExecutionSuccessCount;
+            state.unitTestExecutionFailureCount =
+                initialState.unitTestExecutionFailureCount;
+            return state;
+        },
     },
     extraReducers: (builder) => {
         builder
@@ -106,5 +117,6 @@ export const {
     increaseUnitTestGenerationFailureCount,
     increaseUnitTestExecutionSuccessCount,
     increaseUnitTestExecutionFailureCount,
+    resetUserActionsRecap,
 } = userActionsRecapSlice.actions;
 export default userActionsRecapSlice.reducer;

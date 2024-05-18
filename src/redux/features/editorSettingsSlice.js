@@ -56,7 +56,9 @@ const editorSettingsSlice = createSlice({
             state.outputEditorOptions = action.payload;
         },
         resetEditorSettings: (state) => {
-            return initialState;
+            state.inputEditorOptions = initialState.inputEditorOptions;
+            state.outputEditorOptions = initialState.outputEditorOptions;
+            return state;
         },
     },
     extraReducers: (builder) => {

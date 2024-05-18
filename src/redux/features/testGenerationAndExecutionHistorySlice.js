@@ -27,7 +27,13 @@ const initialState = {
 export const testGenerationAndExecutionHistorySlice = createSlice({
     name: 'testGenerationAndExecutionHistorySlice',
     initialState,
-    reducers: {},
+    reducers: {
+        resetTestGenerationAndExecutionHistory: (state) => {
+            state.testGenerationHistories =
+                initialState.testGenerationHistories;
+            return state;
+        },
+    },
     extraReducers: (builder) => {
         builder.addCase(
             fetchTestGenerationAndExecutionHistoryDataFromDB.fulfilled,
@@ -36,8 +42,10 @@ export const testGenerationAndExecutionHistorySlice = createSlice({
                 state.testGenerationHistories = action.payload;
             }
         );
-        // You might want to handle the pending and rejected cases as well
     },
 });
+
+export const { resetTestGenerationAndExecutionHistory } =
+    testGenerationAndExecutionHistorySlice.actions;
 
 export default testGenerationAndExecutionHistorySlice.reducer;

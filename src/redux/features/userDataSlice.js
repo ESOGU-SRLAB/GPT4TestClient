@@ -5,9 +5,45 @@ import axios from 'axios';
 
 export const handleLogout = (navigate) => (dispatch) => {
     localStorage.removeItem('userData');
-    dispatch(logoutUser());
     navigate('/login');
 };
+
+export const updateUserCredentials = createAsyncThunk(
+    'userData/updateUserCredentials',
+    async (
+        { newUsername, newEmailAddress, authenticationPassword },
+        { getState, dispatch }
+    ) => {
+        const { userData } = getState();
+        const userIdentifier = userData.username || userData.userEmailAddress;
+        const response = await axios.post(
+            'http://localhost:5000/api/auth/updateUserCredentials',
+            {
+                userIdentifier,
+                newUsername,
+                newEmailAddress,
+                authenticationPassword,
+            }
+        );
+        console.log('here', response.status);
+        if (response.data.type === 'success') {
+            dispatch(
+                setUserData({
+                    username: newUsername,
+                    userEmailAddress: newEmailAddress,
+                })
+            );
+            saveUserDataToLocalStorage({
+                username: newUsername,
+                userEmailAddress: newEmailAddress,
+            });
+            toast.success(response.data.message);
+            return response.data;
+        } else {
+            toast.error(response.data.message);
+        }
+    }
+);
 
 // Async thunk for logging in a user
 export const loginUser = createAsyncThunk(
@@ -93,9 +129,10 @@ export const userDataSlice = createSlice({
                 userEmailAddress,
             ];
         },
-        logoutUser: (state) => {
+        resetUserData: (state) => {
             state.username = null;
             state.userEmailAddress = null;
+            return state;
         },
     },
     extraReducers: (builder) => {
@@ -103,8 +140,10 @@ export const userDataSlice = createSlice({
         builder.addCase(registerUser.rejected, (state, action) => {});
         builder.addCase(loginUser.fulfilled, (state, action) => {});
         builder.addCase(loginUser.rejected, (state, action) => {});
+        builder.addCase(updateUserCredentials.fulfilled, (state, action) => {});
+        builder.addCase(updateUserCredentials.rejected, (state, action) => {});
     },
 });
 
-export const { setUserData, logoutUser } = userDataSlice.actions;
+export const { setUserData, resetUserData } = userDataSlice.actions;
 export default userDataSlice.reducer;

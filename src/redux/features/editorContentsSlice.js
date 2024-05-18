@@ -24,7 +24,6 @@ export const saveTestExecutionResultsToDB = createAsyncThunk(
             );
             return response.data;
         } catch (error) {
-            console.log(error.message);
             return rejectWithValue(error.response.data);
         }
     }
@@ -49,7 +48,6 @@ export const saveTestGenerationResults = createAsyncThunk(
             testGenerationHistoryId: state.testGenerationHistoryId,
             modelSettings,
         };
-        console.log(userIdentifier, data);
         try {
             const response = await axios.post(
                 'http://localhost:5000/api/users/testGenerationHistories/saveTestGenerationResults',
@@ -57,7 +55,6 @@ export const saveTestGenerationResults = createAsyncThunk(
             );
             return response.data;
         } catch (error) {
-            console.log(error.message);
             return rejectWithValue(error.response.data);
         }
     }
@@ -110,6 +107,21 @@ export const editorContentsSlice = createSlice({
             state.testGenerationCountInCurrentSession =
                 initialState.testGenerationCountInCurrentSession;
         },
+        resetEditorContents: (state) => {
+            state.testGenerationCountInCurrentSession =
+                initialState.testGenerationCountInCurrentSession;
+            state.testGenerationHistoryId =
+                initialState.testGenerationHistoryId;
+            state.currentTestGenerationElementId =
+                initialState.currentTestGenerationElementId;
+            state.inputEditorContent = initialState.inputEditorContent;
+            state.outputEditorContent = initialState.outputEditorContent;
+            state.generationDateTimestamp =
+                initialState.generationDateTimestamp;
+            state.isExecuted = initialState.isExecuted;
+            state.executionResults = initialState.executionResults;
+            return state;
+        },
     },
     extraReducers: (builder) => {
         builder
@@ -134,6 +146,7 @@ export const {
     updateOutputEditorContent,
     updateExecutionResults,
     createNewSession,
+    resetEditorContents,
 } = editorContentsSlice.actions;
 
 export default editorContentsSlice.reducer;
