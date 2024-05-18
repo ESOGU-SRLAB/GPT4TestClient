@@ -1,28 +1,17 @@
-import React from 'react';
-import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { handleLogout } from '../../redux/features/userDataSlice';
-import { resetEditorSettings } from '../../redux/features/editorSettingsSlice';
-import { resetModelSettings } from '../../redux/features/modelSettingsSlice';
 import { fetchUserActionsRecapDataFromDB } from '../../redux/features/userActionsRecapSlice';
 import { useEffect } from 'react';
 import { ResponsivePie } from '@nivo/pie';
-import { Paper, Grid, Typography } from '@mui/material';
+import { Paper, Grid, Typography, Box } from '@mui/material';
+import NoDataIcon from '../../assets/nodata.png';
 
 const DashboardPage = () => {
     const dispatch = useDispatch();
-    const navigate = useNavigate();
     const userActionsRecapData = useSelector((state) => state.userActionsRecap);
 
     useEffect(() => {
         dispatch(fetchUserActionsRecapDataFromDB());
     }, [dispatch]);
-
-    const onLogoutClick = () => {
-        dispatch(resetModelSettings());
-        dispatch(resetEditorSettings());
-        dispatch(handleLogout(navigate));
-    };
 
     // Prepare data for Nivo Pie Chart
     const generateChartData = (successCount, failureCount) => {
@@ -52,11 +41,64 @@ const DashboardPage = () => {
         userActionsRecapData.unitTestExecutionSuccessCount,
         userActionsRecapData.unitTestExecutionFailureCount
     );
+    const totalCount =
+        userActionsRecapData.unitTestGenerationSuccessCount +
+        userActionsRecapData.unitTestGenerationFailureCount +
+        userActionsRecapData.unitTestExecutionSuccessCount +
+        userActionsRecapData.unitTestExecutionFailureCount;
+
+    if (totalCount === 0) {
+        // No history, render the image
+        return (
+            <Box
+                sx={{
+                    display: 'flex',
+                    flexDirection: 'column', // Stack items vertically
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    height: '100vh',
+                }}
+            >
+                <img
+                    src={NoDataIcon}
+                    alt="No history available"
+                    style={{ maxWidth: '100%', maxHeight: '100%' }}
+                />
+                <Typography
+                    variant="h5"
+                    sx={{
+                        fontWeight: 'bold',
+                        color: '#0d47a1',
+                        mt: 5, // Adjust the margin-top for spacing between image and text
+                        textAlign: 'center', // Center the text
+                    }}
+                >
+                    You did not generate & execute any unit tests, go generate
+                    it!
+                </Typography>
+                <Typography
+                    variant="h5"
+                    sx={{
+                        fontWeight: 'bold',
+                        color: '#42a5f5',
+                        mt: 5, // Adjust the margin-top for spacing between image and text
+                        textAlign: 'center', // Center the text
+                    }}
+                >
+                    Your recap charts will appear here once you generate some
+                    tests!
+                </Typography>
+            </Box>
+        );
+    }
 
     return (
         <div>
-            <button onClick={onLogoutClick}>Logout</button>
-            <Grid container justifyContent="center" sx={{ mt: 7 }}>
+            <Grid
+                container
+                justifyContent="center"
+                sx={{ height: '100vh', overflowY: 'auto', mt: 7 }}
+            >
                 <Grid
                     item
                     xs={12}
@@ -71,6 +113,7 @@ const DashboardPage = () => {
                             padding: '5vh',
                             borderRadius: 0,
                             backgroundColor: '#f5f5f5',
+                            mb: 5,
                         }}
                         elevation={10}
                     >
@@ -115,6 +158,7 @@ const DashboardPage = () => {
                     md={6}
                     display="flex"
                     justifyContent="center"
+                    sx={{ mb: 10 }}
                 >
                     <Paper
                         sx={{
@@ -123,6 +167,7 @@ const DashboardPage = () => {
                             padding: '5vh',
                             borderRadius: 0,
                             backgroundColor: '#f5f5f5',
+                            mb: 5,
                         }}
                         elevation={10}
                     >

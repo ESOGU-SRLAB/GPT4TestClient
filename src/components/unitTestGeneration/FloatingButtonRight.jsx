@@ -19,14 +19,12 @@ const FloatingButtonRight = ({ onClick }) => {
                 padding: 0,
                 borderRadius: '50%',
                 color: 'black',
-                opacity: 0, // Initially invisible
+                opacity: 1, // Visible by default
                 transition: 'opacity 0.3s', // Smooth transition for opacity
                 display: 'flex',
                 justifyContent: 'center',
                 alignItems: 'center',
-                '&:hover': {
-                    opacity: 1, // Visible on hover
-                },
+                // Remove &:hover block
             }}
         >
             <img
@@ -35,6 +33,7 @@ const FloatingButtonRight = ({ onClick }) => {
                     width: '2rem', // Adjust as needed
                     height: 'auto',
                 }}
+                alt="Button Icon"
             />
         </Button>
     );

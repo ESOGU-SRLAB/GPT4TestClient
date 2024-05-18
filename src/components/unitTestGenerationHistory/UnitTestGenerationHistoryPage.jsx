@@ -13,6 +13,7 @@ import {
     Grid,
     Chip,
 } from '@mui/material';
+import NoDataIcon from '../../assets/nodata.png';
 
 const CustomTerminalDisplay = ({ content }) => {
     return (
@@ -72,12 +73,63 @@ const UnitTestGenerationHistoryPage = () => {
     };
 
     const renderUserTestGenerationAndExecutionHistory = () => {
+        if (userTestGenerationAndExecutionHistory.length === 0) {
+            // No history, render the image
+            return (
+                <Box
+                    sx={{
+                        display: 'flex',
+                        flexDirection: 'column', // Stack items vertically
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        height: '100vh',
+                    }}
+                >
+                    <img
+                        src={NoDataIcon}
+                        alt="No history available"
+                        style={{ maxWidth: '100%', maxHeight: '100%' }}
+                    />
+                    <Typography
+                        variant="h5"
+                        sx={{
+                            fontWeight: 'bold',
+                            color: '#0d47a1',
+                            mt: 5, // Adjust the margin-top for spacing between image and text
+                            textAlign: 'center', // Center the text
+                        }}
+                    >
+                        You did not generate & execute any unit tests, go
+                        generate it!
+                    </Typography>
+                    <Typography
+                        variant="h5"
+                        sx={{
+                            fontWeight: 'bold',
+                            color: '#42a5f5',
+                            mt: 5, // Adjust the margin-top for spacing between image and text
+                            textAlign: 'center', // Center the text
+                        }}
+                    >
+                        Your history will appear here once you generate some
+                        tests!
+                    </Typography>
+                </Box>
+            );
+        }
         return userTestGenerationAndExecutionHistory.map(
             (sessionElement, sessionIndex) => (
                 <Paper
                     key={sessionIndex}
                     elevation={3}
-                    sx={{ mb: 4, p: 2, mx: 5, mt: 5 }}
+                    sx={{
+                        mb: 4,
+                        p: 2,
+                        mx: 5,
+                        mt: 5,
+                        backgroundColor: '#bbdefb',
+                        borderRadius: 0,
+                    }}
                 >
                     {sessionElement.testGenerationHistories.map(
                         (individualGenerationData, index) => {
@@ -88,7 +140,7 @@ const UnitTestGenerationHistoryPage = () => {
                                 <Paper
                                     key={individualGenerationData.dateTimestamp}
                                     elevation={1}
-                                    sx={{ mb: 2, p: 2 }}
+                                    sx={{ mb: 2, p: 2, borderRadius: 0 }}
                                 >
                                     <Box sx={{ mb: 2 }}>
                                         <Grid
@@ -122,6 +174,12 @@ const UnitTestGenerationHistoryPage = () => {
                                         onChange={(e, newValue) =>
                                             handleTabChange(e, newValue, id)
                                         }
+                                        variant="scrollable"
+                                        scrollButtons="auto"
+                                        allowScrollButtonsMobile
+                                        sx={{
+                                            overflowY: 'hidden',
+                                        }}
                                     >
                                         <Tab label="Focal Code" />
                                         <Tab label="Test Code" />
@@ -174,7 +232,7 @@ const UnitTestGenerationHistoryPage = () => {
         );
     };
     return (
-        <Box sx={{ maxHeight: '90vh', overflowY: 'auto' }}>
+        <Box sx={{ maxHeight: '100vh', overflowY: 'auto' }}>
             {renderUserTestGenerationAndExecutionHistory()}
             <Modal open={openModal} onClose={handleCloseModal}>
                 <Box
@@ -183,7 +241,7 @@ const UnitTestGenerationHistoryPage = () => {
                         top: '50%',
                         left: '50%',
                         transform: 'translate(-50%, -50%)',
-                        width: 400,
+                        width: '50%',
                         bgcolor: 'background.paper',
                         p: 4,
                     }}

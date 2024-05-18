@@ -264,7 +264,6 @@ const TerminalSettingsPage = () => {
             currentTab === 0
                 ? executionTerminalPreviewThemeName
                 : specialTerminalPreviewThemeName;
-        console.log(`Dispatching to set theme name: ${themeName}`);
 
         if (currentTab === 0) {
             dispatch(setExecutionTerminalSelectedThemeName(themeName));
@@ -324,7 +323,12 @@ const TerminalSettingsPage = () => {
                         <Tabs
                             value={currentTab}
                             onChange={handleTabChange}
-                            centered
+                            variant="scrollable"
+                            scrollButtons="auto"
+                            allowScrollButtonsMobile
+                            sx={{
+                                overflowY: 'hidden',
+                            }}
                         >
                             <Tab label="Execution Terminal Settings" />
                             <Tab label="Special Command Terminal Settings" />

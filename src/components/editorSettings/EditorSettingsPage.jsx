@@ -179,9 +179,14 @@ const EditorSettingsPage = () => {
             <SplitPane split="horizontal" sizes={sizes} onChange={setSizes}>
                 <Pane minSize="20%" maxSize="80%">
                     <Tabs
-                        value={currentTab}
                         onChange={handleTabChange}
-                        centered
+                        value={currentTab}
+                        variant="scrollable"
+                        scrollButtons="auto"
+                        allowScrollButtonsMobile
+                        sx={{
+                            overflowY: 'hidden',
+                        }}
                     >
                         <Tab label="Input Editor Settings" />
                         <Tab label="Output Editor Settings" />

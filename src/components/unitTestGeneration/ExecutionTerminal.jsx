@@ -62,7 +62,7 @@ const ExecutionTerminal = () => {
     };
 
     const sendGenerateRequest = async () => {
-        if (testGenerationCountInCurrentSession >= 2) {
+        if (testGenerationCountInCurrentSession >= 5) {
             toast.error(
                 'You have already reached the test generation limit of 5!'
             );
@@ -70,10 +70,10 @@ const ExecutionTerminal = () => {
         }
         try {
             const response = await axios.post(
-                'http://localhost:5005/generate',
+                'http://localhost:4000/generate/openai',
                 {
                     focalCode: inputEditorContent,
-                    modelSettings,
+                    ...modelSettings,
                 }
             );
             const { code, testFunction } = response.data;

@@ -24,7 +24,6 @@ const LoginPage = () => {
     const [formData, setFormData] = useState({
         identifier: '',
         password: '',
-        rememberMe: false,
     });
 
     const handleChange = (event) => {
@@ -106,18 +105,6 @@ const LoginPage = () => {
                             autoComplete="current-password"
                             onChange={handleChange}
                             value={formData.password}
-                        />
-                        <FormControlLabel
-                            control={
-                                <Checkbox
-                                    name="rememberMe"
-                                    value="remember"
-                                    color="primary"
-                                    onChange={handleChange}
-                                    checked={formData.rememberMe}
-                                />
-                            }
-                            label="Remember me"
                         />
                         <Button
                             type="submit"
