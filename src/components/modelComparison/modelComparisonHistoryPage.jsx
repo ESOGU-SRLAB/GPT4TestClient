@@ -7,10 +7,8 @@ import {
     Box,
     Typography,
     Accordion,
-    AccordionActions,
     AccordionSummary,
     AccordionDetails,
-    Button,
     Grid,
 } from '@mui/material';
 import ComparisonReportPage from './comparisonReportPage';
@@ -40,16 +38,33 @@ const ModelComparisonHistoryPage = () => {
         let { comparisonResultsHistories } = userComparisonHistory;
         return comparisonResultsHistories.map(
             ({ comparisonResults, dateTimeStamp }, index) => {
-                const formattedDateTime = new Date(
-                    dateTimeStamp
-                ).toLocaleString();
+                const formattedDateTime = new Date(dateTimeStamp)
+                    .toLocaleString()
+                    .replace(',', ' -');
                 return (
                     <Accordion
                         slotProps={{ transition: { unmountOnExit: true } }}
                         key={index}
                     >
-                        <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-                            <Typography color={'#212121'}>
+                        <AccordionSummary
+                            expandIcon={
+                                <ExpandMoreIcon sx={{ color: 'white' }} />
+                            }
+                            sx={{
+                                backgroundColor: '#212121',
+                                border: '1px #eeeeee solid',
+                            }}
+                        >
+                            <Typography
+                                variant="caption"
+                                color={'#eeeeee'}
+                                fontWeight={'bold'}
+                                sx={{
+                                    width: '100%',
+                                    height: '100%',
+                                }}
+                                textAlign={'center'}
+                            >
                                 {formattedDateTime}
                             </Typography>
                         </AccordionSummary>

@@ -1,17 +1,17 @@
-/* eslint-disable react/prop-types */
 import { Grid, Typography } from '@mui/material';
-
-const OpenAIParameterDialog = ({ modelData }) => {
+/* eslint-disable react/prop-types */
+const MistralParameterDialog = ({ modelData }) => {
+    console.log(modelData);
     const {
         LLMName,
         id,
-        modelSelection,
         temperature,
-        maxLength,
-        stopSequences,
+        minNewTokens,
+        maxNewTokens,
+        topK,
         topP,
-        frequencyPenalty,
-        presencePenalty,
+        presPenalty,
+        lenPenalty,
     } = modelData;
     const renderParameterValueMatch = (name, value) => {
         return (
@@ -52,18 +52,15 @@ const OpenAIParameterDialog = ({ modelData }) => {
         <Grid container sx={{ width: '100%', height: '100%' }}>
             {renderParameterValueMatch('LLM Name', LLMName)}
             {renderParameterValueMatch('Comparison Model ID', id)}
-            {renderParameterValueMatch('Model Selection', modelSelection)}
             {renderParameterValueMatch('temperature', temperature)}
-            {renderParameterValueMatch('frequency penalty', frequencyPenalty)}
-            {renderParameterValueMatch('max length', maxLength)}
-            {renderParameterValueMatch('presence penalty', presencePenalty)}
+            {renderParameterValueMatch('Min New Tokens', minNewTokens)}
+            {renderParameterValueMatch('Max New Tokens', maxNewTokens)}
+            {renderParameterValueMatch('Presence Penalty', presPenalty)}
+            {renderParameterValueMatch('Length Penalty', lenPenalty)}
             {renderParameterValueMatch('Top P', topP)}
-            {renderParameterValueMatch(
-                'Stop Sequences',
-                stopSequences.join(' - ')
-            )}
+            {renderParameterValueMatch('Top K', topK)}
         </Grid>
     );
 };
 
-export default OpenAIParameterDialog;
+export default MistralParameterDialog;

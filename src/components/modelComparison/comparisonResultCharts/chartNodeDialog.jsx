@@ -7,6 +7,9 @@ import {
 } from '@mui/material';
 import { useSelector } from 'react-redux';
 import OpenAIParameterDialog from './parametersDialogComponents/openAIParameterDialog';
+import GeminiParameterDialog from './parametersDialogComponents/geminiParameterDialog';
+import LlamaParameterDialog from './parametersDialogComponents/llamaParameterDialog';
+import MistralParameterDialog from './parametersDialogComponents/mistralParameterDialog';
 
 // eslint-disable-next-line react/prop-types
 const ChartNodeDialog = ({ id, dialogOpen, setDialogOpen }) => {
@@ -21,6 +24,12 @@ const ChartNodeDialog = ({ id, dialogOpen, setDialogOpen }) => {
         switch (targetModelData?.LLMName) {
             case 'OpenAI':
                 return <OpenAIParameterDialog modelData={targetModelData} />;
+            case 'Gemini':
+                return <GeminiParameterDialog modelData={targetModelData} />;
+            case 'Llama':
+                return <LlamaParameterDialog modelData={targetModelData} />;
+            case 'Mistral':
+                return <MistralParameterDialog modelData={targetModelData} />;
             default:
                 return <>No Content</>;
         }
@@ -40,7 +49,9 @@ const ChartNodeDialog = ({ id, dialogOpen, setDialogOpen }) => {
             >
                 MODEL PARAMETERs
             </DialogTitle>
-            <DialogContent>{renderDialogContent()}</DialogContent>
+            <DialogContent sx={{ width: '100%', height: '100%' }}>
+                {renderDialogContent()}
+            </DialogContent>
             <DialogActions>
                 <Button onClick={() => setDialogOpen(false)} variant="error">
                     Close

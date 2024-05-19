@@ -1,17 +1,15 @@
 /* eslint-disable react/prop-types */
 import { Grid, Typography } from '@mui/material';
 
-const OpenAIParameterDialog = ({ modelData }) => {
+const GeminiParameterDialog = ({ modelData }) => {
     const {
         LLMName,
         id,
-        modelSelection,
         temperature,
-        maxLength,
+        maxOutputTokens,
         stopSequences,
         topP,
-        frequencyPenalty,
-        presencePenalty,
+        topK,
     } = modelData;
     const renderParameterValueMatch = (name, value) => {
         return (
@@ -52,11 +50,9 @@ const OpenAIParameterDialog = ({ modelData }) => {
         <Grid container sx={{ width: '100%', height: '100%' }}>
             {renderParameterValueMatch('LLM Name', LLMName)}
             {renderParameterValueMatch('Comparison Model ID', id)}
-            {renderParameterValueMatch('Model Selection', modelSelection)}
             {renderParameterValueMatch('temperature', temperature)}
-            {renderParameterValueMatch('frequency penalty', frequencyPenalty)}
-            {renderParameterValueMatch('max length', maxLength)}
-            {renderParameterValueMatch('presence penalty', presencePenalty)}
+            {renderParameterValueMatch('Max Output Tokens', maxOutputTokens)}
+            {renderParameterValueMatch('Top K', topK)}
             {renderParameterValueMatch('Top P', topP)}
             {renderParameterValueMatch(
                 'Stop Sequences',
@@ -66,4 +62,4 @@ const OpenAIParameterDialog = ({ modelData }) => {
     );
 };
 
-export default OpenAIParameterDialog;
+export default GeminiParameterDialog;

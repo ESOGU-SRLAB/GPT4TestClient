@@ -1,17 +1,19 @@
 /* eslint-disable react/prop-types */
 import { Grid, Typography } from '@mui/material';
 
-const OpenAIParameterDialog = ({ modelData }) => {
+const LlamaParameterDialog = ({ modelData }) => {
     const {
         LLMName,
         id,
         modelSelection,
         temperature,
-        maxLength,
-        stopSequences,
+        maxTokens,
+        minTokens,
         topP,
-        frequencyPenalty,
-        presencePenalty,
+        topK,
+        presPenalty,
+        repPenalty,
+        freqPenalty,
     } = modelData;
     const renderParameterValueMatch = (name, value) => {
         return (
@@ -54,16 +56,15 @@ const OpenAIParameterDialog = ({ modelData }) => {
             {renderParameterValueMatch('Comparison Model ID', id)}
             {renderParameterValueMatch('Model Selection', modelSelection)}
             {renderParameterValueMatch('temperature', temperature)}
-            {renderParameterValueMatch('frequency penalty', frequencyPenalty)}
-            {renderParameterValueMatch('max length', maxLength)}
-            {renderParameterValueMatch('presence penalty', presencePenalty)}
+            {renderParameterValueMatch('frequency penalty', freqPenalty)}
+            {renderParameterValueMatch('repetition penalty', repPenalty)}
+            {renderParameterValueMatch('presence penalty', presPenalty)}
             {renderParameterValueMatch('Top P', topP)}
-            {renderParameterValueMatch(
-                'Stop Sequences',
-                stopSequences.join(' - ')
-            )}
+            {renderParameterValueMatch('Top K', topK)}
+            {renderParameterValueMatch('Min Tokens', minTokens)}
+            {renderParameterValueMatch('Max Tokens', maxTokens)}
         </Grid>
     );
 };
 
-export default OpenAIParameterDialog;
+export default LlamaParameterDialog;
