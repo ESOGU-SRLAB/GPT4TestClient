@@ -40,7 +40,8 @@ const ExecutionTerminal = () => {
 
     const sendExecutionRequest = async () => {
         try {
-            const response = await axios.post('http://localhost:5005/execute', {
+            const response = await axios.post('http://localhost:4000/execute', {
+                focalCode: inputEditorContent,
                 testFunction: outputEditorContent,
             });
             const { code, executionResult } = response.data;

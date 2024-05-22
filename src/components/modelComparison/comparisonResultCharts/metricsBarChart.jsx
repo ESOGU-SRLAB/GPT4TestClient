@@ -1,14 +1,33 @@
+import { useState } from 'react';
 import { Grid } from '@mui/material';
 import { ResponsiveBar } from '@nivo/bar';
+import ChartNodeDialog from './chartNodeDialog';
 
 // eslint-disable-next-line react/prop-types
-const MetricsBarChart = ({ comparisonResults, metric }) => {
+const MetricsBarChart = ({
+    comparisonResults,
+    metric,
+    toCompareListIndividual,
+}) => {
     const dataFormatter = (list) => {
-        return list.map((item) => ({
-            model: item.id,
-            label: item.id,
-            metric: item[metric],
-        }));
+        return list
+            .filter((item) => selectedLines.includes(item.id))
+            .map((item) => ({
+                model: item.id,
+                label: item.id,
+                metric: item[metric],
+            }));
+    };
+    const [selectedLines, setSelectedLines] = useState(
+        comparisonResults.map((item) => item.id)
+    );
+
+    const handleLegendClick = (node) => {
+        setSelectedLines((prevSelectedLines) =>
+            prevSelectedLines.includes(node.id)
+                ? prevSelectedLines.filter((id) => id !== node.id)
+                : [...prevSelectedLines, node.id]
+        );
     };
 
     const data = dataFormatter(comparisonResults);
@@ -73,6 +92,7 @@ const MetricsBarChart = ({ comparisonResults, metric }) => {
                         itemDirection: 'left-to-right',
                         itemOpacity: 0.85,
                         symbolSize: 20,
+                        onClick: handleLegendClick,
                         effects: [
                             {
                                 on: 'hover',

@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import {
     Dialog,
     DialogTitle,
@@ -12,10 +13,20 @@ import LlamaParameterDialog from './parametersDialogComponents/llamaParameterDia
 import MistralParameterDialog from './parametersDialogComponents/mistralParameterDialog';
 
 // eslint-disable-next-line react/prop-types
-const ChartNodeDialog = ({ id, dialogOpen, setDialogOpen }) => {
-    const toCompareList = useSelector(
+const ChartNodeDialog = ({
+    id,
+    dialogOpen,
+    setDialogOpen,
+    toCompareListIndividual,
+}) => {
+    const toCompareListRedux = useSelector(
         (state) => state.toCompareList.toCompareList
     );
+
+    const toCompareList = toCompareListIndividual
+        ? toCompareListIndividual
+        : toCompareListRedux;
+
     const targetModelData = toCompareList.filter(
         (modelData) => modelData.id === id
     )[0];

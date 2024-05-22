@@ -37,7 +37,7 @@ const ModelComparisonHistoryPage = () => {
     const renderComparisonResults = () => {
         let { comparisonResultsHistories } = userComparisonHistory;
         return comparisonResultsHistories.map(
-            ({ comparisonResults, dateTimeStamp }, index) => {
+            ({ comparisonResults, dateTimeStamp, toCompareList }, index) => {
                 const formattedDateTime = new Date(dateTimeStamp)
                     .toLocaleString()
                     .replace(',', ' -');
@@ -71,6 +71,7 @@ const ModelComparisonHistoryPage = () => {
                         <AccordionDetails>
                             <ComparisonReportPage
                                 comparisonResultsIndividual={comparisonResults}
+                                toCompareListIndividual={toCompareList}
                             />
                         </AccordionDetails>
                     </Accordion>

@@ -4,7 +4,11 @@ import { useState } from 'react';
 import ChartNodeDialog from './chartNodeDialog';
 
 // eslint-disable-next-line react/prop-types
-const MetricsPieChart = ({ comparisonResults, metric }) => {
+const MetricsPieChart = ({
+    comparisonResults,
+    metric,
+    toCompareListIndividual,
+}) => {
     const [selectedLines, setSelectedLines] = useState(
         comparisonResults.map((item) => item.id)
     );
@@ -83,6 +87,7 @@ const MetricsPieChart = ({ comparisonResults, metric }) => {
                 ]}
             />
             <ChartNodeDialog
+                toCompareListIndividual={toCompareListIndividual}
                 id={node?.id}
                 dialogOpen={dialogOpen}
                 setDialogOpen={setDialogOpen}

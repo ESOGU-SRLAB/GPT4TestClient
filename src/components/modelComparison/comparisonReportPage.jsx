@@ -21,7 +21,10 @@ const TabPanel = ({ children, value, index }) => {
 };
 
 // eslint-disable-next-line react/prop-types
-const ComparisonReportPage = ({ comparisonResultsIndividual }) => {
+const ComparisonReportPage = ({
+    comparisonResultsIndividual,
+    toCompareListIndividual,
+}) => {
     const reduxComparisonResults = useSelector(
         (state) => state.toCompareList.comparisonResults
     );
@@ -90,6 +93,7 @@ const ComparisonReportPage = ({ comparisonResultsIndividual }) => {
                 </Tabs>
                 <TabPanel value={uniqueParamCountTabIndex} index={1}>
                     <MetricsPieChart
+                        toCompareListIndividual={toCompareListIndividual}
                         comparisonResults={comparisonResults}
                         metric={'uniqueParamCount'}
                     />
@@ -123,6 +127,7 @@ const ComparisonReportPage = ({ comparisonResultsIndividual }) => {
                 </Tabs>
                 <TabPanel value={assertionCountTabIndex} index={1}>
                     <MetricsPieChart
+                        toCompareListIndividual={toCompareListIndividual}
                         comparisonResults={comparisonResults}
                         metric={'assertionCount'}
                     />
@@ -157,6 +162,7 @@ const ComparisonReportPage = ({ comparisonResultsIndividual }) => {
                 </Tabs>
                 <TabPanel value={codeLengthTabIndex} index={1}>
                     <MetricsPieChart
+                        toCompareListIndividual={toCompareListIndividual}
                         comparisonResults={comparisonResults}
                         metric={'codeLength'}
                     />
@@ -190,6 +196,7 @@ const ComparisonReportPage = ({ comparisonResultsIndividual }) => {
                 </Tabs>
                 <TabPanel value={uniqueVariableCountTabIndex} index={1}>
                     <MetricsPieChart
+                        toCompareListIndividual={toCompareListIndividual}
                         comparisonResults={comparisonResults}
                         metric={'uniqueVariableCount'}
                     />
@@ -225,12 +232,14 @@ const ComparisonReportPage = ({ comparisonResultsIndividual }) => {
                 <TabPanel value={elapsedTimeTabIndex} index={1}>
                     <MetricsPieChart
                         comparisonResults={comparisonResults}
+                        toCompareListIndividual={toCompareListIndividual}
                         metric={'elapsedTime'}
                     />
                 </TabPanel>
                 <TabPanel value={elapsedTimeTabIndex} index={2}>
                     <MetricsBarChart
                         comparisonResults={comparisonResults}
+                        toCompareListIndividual={toCompareListIndividual}
                         metric={'elapsedTime'}
                     />
                 </TabPanel>
