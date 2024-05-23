@@ -3,10 +3,10 @@ const initialState = {
     LLMName: 'Gemini',
     modelSelection: 'Gemini',
     isUsed: true,
-    temperature: 1.7,
-    maxOutputTokens: 2000,
+    temperature: 0.8,
+    maxOutputTokens: 1536,
     topP: 0.7,
-    topK: 400,
+    topK: 250,
     stopSequences: [],
 };
 

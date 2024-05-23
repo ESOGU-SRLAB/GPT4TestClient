@@ -6,6 +6,7 @@ import {
     SpeedDialIcon,
     SpeedDialAction,
     Typography,
+    IconButton,
 } from '@mui/material';
 import ComparisonEditor from './comparisonEditor';
 import ReviewDialogComponent from './reviewDialogComponent';
@@ -16,6 +17,8 @@ import Mistral from './modelComponents/Mistral';
 import ChecklistIcon from '@mui/icons-material/Checklist';
 import BalanceIcon from '@mui/icons-material/Balance';
 import EqulalizeDialogComponent from './equalizeDialogComponent';
+import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
+import ModelParameterDescriptionsDialog from './modelParameterDecriptionsDialog';
 
 const ModelComparisonPage = () => {
     const [open, setOpen] = useState(false);
@@ -32,6 +35,9 @@ const ModelComparisonPage = () => {
     const handleEqualizeParameters = () => {
         setEqualizeDialogOpen(true);
     };
+
+    const [parameterInfoDialogOpen, setParameterInfoDialogOpen] =
+        useState(false);
 
     const actions = [
         { icon: <ChecklistIcon />, name: 'Review', onClick: handleReview },
@@ -52,8 +58,26 @@ const ModelComparisonPage = () => {
                     backgroundColor: '#212121 !important',
                 }}
                 textAlign={'center'}
+                alignContent={'center'}
             >
-                <p>SELECT MODELs To COMPARE</p>
+                <p
+                    style={{
+                        display: 'inline-block',
+                        marginRight: '1em',
+                    }}
+                >
+                    SELECT MODELS TO COMPARE
+                </p>
+                <IconButton
+                    onClick={() => setParameterInfoDialogOpen(true)}
+                    sx={{
+                        fontSize: 'inherit',
+                        cursor: 'pointer',
+                        display: 'inline-block',
+                    }}
+                >
+                    <HelpOutlineIcon sx={{ color: '#fafafa' }} />
+                </IconButton>
             </Typography>
             <Grid item xs={12} sx={{ overflowX: 'auto', height: '50vh' }}>
                 <Paper
@@ -105,6 +129,10 @@ const ModelComparisonPage = () => {
             <EqulalizeDialogComponent
                 dialogOpen={equalizeDialogOpen}
                 setDialogOpen={setEqualizeDialogOpen}
+            />
+            <ModelParameterDescriptionsDialog
+                dialogOpen={parameterInfoDialogOpen}
+                setDialogOpen={setParameterInfoDialogOpen}
             />
         </Grid>
     );

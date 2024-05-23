@@ -4,12 +4,12 @@ const initialState = {
     LLMName: 'OpenAI',
     isUsed: true,
     modelSelection: 'gpt-3.5-turbo-1106',
-    temperature: 1.7,
-    maxLength: 2000,
+    temperature: 0.8,
+    maxLength: 1536,
     stopSequences: [],
     topP: 0.7,
-    frequencyPenalty: 0,
-    presencePenalty: 0,
+    frequencyPenalty: 0.3,
+    presencePenalty: 0.3,
 };
 
 export const openAIComparisonSlice = createSlice({

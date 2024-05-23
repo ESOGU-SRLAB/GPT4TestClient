@@ -4,13 +4,13 @@ const initialState = {
     isUsed: true,
     modelSelection: 'CodeLlama-34b-Python',
     topK: 250,
-    topP: 1,
+    topP: 0.7,
     minTokens: 512,
-    maxTokens: 2048,
-    temperature: 0.7,
-    repPenalty: 0.2,
+    maxTokens: 1536,
+    temperature: 0.8,
+    repPenalty: 0.6,
     presPenalty: 0.2,
-    freqPenalty: 0.3,
+    freqPenalty: 0.6,
 };
 
 export const llamaComparisonSlice = createSlice({

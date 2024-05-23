@@ -4,12 +4,12 @@ const initialState = {
     LLMName: 'Mistral',
     modelSelection: 'Mistral',
     isUsed: true,
-    temperature: 0.7,
+    temperature: 0.8,
     topK: 250,
-    topP: 1,
-    lenPenalty: 0.2,
+    topP: 0.7,
+    lenPenalty: 0.6,
     minNewTokens: 512,
-    maxNewTokens: 2048,
+    maxNewTokens: 1536,
     presPenalty: 0.2,
 };
 
